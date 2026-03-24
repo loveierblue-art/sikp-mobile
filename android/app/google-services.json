@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "898657794548",
+    "project_id": "sikp-app",
+    "storage_bucket": "sikp-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898657794548:android:b09473ea1e127cb07421a1",
+        "android_client_info": {
+          "package_name": "com.example.sikp_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBasnftO9BHmn2k6X1RhgKcwc6yNAmmyTk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

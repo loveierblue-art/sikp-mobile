@@ -1,0 +1,622 @@
+import 'package:flutter/material.dart';
+import 'services/api_service.dart';
+import 'login_page.dart';
+import 'ajukan_kp_page.dart';
+import 'download_surat_page.dart';
+import 'profil_mahasiswa_page.dart';
+import 'riwayat_pengajuan_page.dart';
+
+class DashboardMahasiswa extends StatefulWidget {
+  const DashboardMahasiswa({super.key});
+
+  @override
+  State<DashboardMahasiswa> createState() => _DashboardMahasiswaState();
+}
+
+class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
+  Map<String, dynamic>? _pengajuanKP;
+  bool _isLoading = true;
+  final ApiService _apiService = ApiService();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPengajuan();
+  }
+
+  void _loadPengajuan() async {
+    final result = await _apiService.getPengajuanKP();
+    if (mounted) {
+      setState(() {
+        _pengajuanKP = result['data'];
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final user = ApiService.currentUser;
+    final String nama = user?['name'] ?? 'Mahasiswa';
+    final String npm = user?['id_user'] ?? '-';
+    final String email = user?['email'] ?? '-';
+    final String status = _pengajuanKP?['status'] ?? 'Belum Diajukan';
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFE6F1FB),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // ── Header ──
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF185FA5), Color(0xFF378ADD)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(36),
+                  bottomRight: Radius.circular(36),
+                ),
+              ),
+              padding: const EdgeInsets.only(
+                top: 64,
+                bottom: 32,
+                left: 24,
+                right: 24,
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'SiKP',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => _showLogoutDialog(context),
+                        child: Container(
+                          width: 38,
+                          height: 38,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.logout_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Container(
+                    width: 72,
+                    height: 72,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.person_rounded,
+                      size: 40,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    nama,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'NPM: $npm',
+                    style: const TextStyle(fontSize: 13, color: Colors.white70),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    email,
+                    style: const TextStyle(fontSize: 13, color: Colors.white70),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      'Mahasiswa',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ── Status KP ──
+                  const Text(
+                    'Status Pengajuan KP',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF0C447C),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: const Color(0xFFB5D4F4),
+                        width: 1,
+                      ),
+                    ),
+                    child:
+                        _isLoading
+                            ? const Center(
+                              child: CircularProgressIndicator(
+                                color: Color(0xFF185FA5),
+                              ),
+                            )
+                            : Row(
+                              children: [
+                                Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    color: _getStatusBgColor(status),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    _getStatusIcon(status),
+                                    color: _getStatusColor(status),
+                                    size: 24,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        status,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          color: _getStatusColor(status),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        _getStatusDesc(status),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black45,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                  ),
+                  const SizedBox(height: 28),
+
+                  // ── Menu ──
+                  const Text(
+                    'Menu',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF0C447C),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 1.1,
+                    children: [
+                      _buildMenuCard(
+                        context,
+                        icon: Icons.assignment_add,
+                        label: 'Ajukan KP',
+                        subtitle: 'Daftar Kerja Praktek',
+                        color: const Color(0xFF185FA5),
+                        bgColor: const Color(0xFFE6F1FB),
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AjukanKpPage(),
+                              ),
+                            ),
+                      ),
+                      _buildMenuCard(
+                        context,
+                        icon: Icons.download_rounded,
+                        label: 'Download Surat',
+                        subtitle: 'Unduh surat KP',
+                        color: const Color(0xFF0F6E56),
+                        bgColor: const Color(0xFFE1F5EE),
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const DownloadSuratPage(),
+                              ),
+                            ),
+                      ),
+                      _buildMenuCard(
+                        context,
+                        icon: Icons.history_rounded,
+                        label: 'Riwayat KP',
+                        subtitle: 'Pantau status pengajuan',
+                        color: const Color(0xFF854F0B),
+                        bgColor: const Color(0xFFFAEEDA),
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => const RiwayatPengajuanPage(),
+                              ),
+                            ),
+                      ),
+                      _buildMenuCard(
+                        context,
+                        icon: Icons.person_outline_rounded,
+                        label: 'Profil',
+                        subtitle: 'Data diri mahasiswa',
+                        color: const Color(0xFF6B2FA0),
+                        bgColor: const Color(0xFFF3E8FF),
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => const ProfilMahasiswaPage(),
+                              ),
+                            ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 28),
+
+                  // ── Profil ──
+                  const Text(
+                    'Informasi Profil',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF0C447C),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: const Color(0xFFB5D4F4),
+                        width: 1,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildProfilRow(Icons.badge_outlined, 'NPM', npm),
+                        const Divider(height: 24, color: Color(0xFFE6F1FB)),
+                        _buildProfilRow(
+                          Icons.person_outline_rounded,
+                          'Nama',
+                          nama,
+                        ),
+                        const Divider(height: 24, color: Color(0xFFE6F1FB)),
+                        _buildProfilRow(Icons.email_outlined, 'Email', email),
+                        const Divider(height: 24, color: Color(0xFFE6F1FB)),
+                        _buildProfilRow(
+                          Icons.school_outlined,
+                          'Role',
+                          'Mahasiswa',
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'disetujui':
+        return const Color(0xFF2E7D32);
+      case 'ditolak':
+        return const Color(0xFFD32F2F);
+      case 'menunggu':
+        return const Color(0xFFF9A825);
+      default:
+        return const Color(0xFF378ADD);
+    }
+  }
+
+  Color _getStatusBgColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'disetujui':
+        return const Color(0xFFE8F5E9);
+      case 'ditolak':
+        return const Color(0xFFFFEBEB);
+      case 'menunggu':
+        return const Color(0xFFFFF8E1);
+      default:
+        return const Color(0xFFE6F1FB);
+    }
+  }
+
+  IconData _getStatusIcon(String status) {
+    switch (status.toLowerCase()) {
+      case 'disetujui':
+        return Icons.check_circle_outline_rounded;
+      case 'ditolak':
+        return Icons.cancel_outlined;
+      case 'menunggu':
+        return Icons.hourglass_empty_rounded;
+      default:
+        return Icons.assignment_outlined;
+    }
+  }
+
+  String _getStatusDesc(String status) {
+    switch (status.toLowerCase()) {
+      case 'disetujui':
+        return 'Pengajuan KP Anda telah disetujui';
+      case 'ditolak':
+        return 'Pengajuan KP Anda ditolak';
+      case 'menunggu':
+        return 'Menunggu persetujuan dari dosen';
+      default:
+        return 'Anda belum mengajukan Kerja Praktek';
+    }
+  }
+
+  Widget _buildMenuCard(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String subtitle,
+    required Color color,
+    required Color bgColor,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFB5D4F4), width: 1),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: color, size: 24),
+            ),
+            const Spacer(),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF0C447C),
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              subtitle,
+              style: const TextStyle(fontSize: 11, color: Colors.black45),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfilRow(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(icon, color: const Color(0xFF378ADD), size: 20),
+        const SizedBox(width: 12),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 13,
+            color: Colors.black45,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 13,
+            color: Color(0xFF0C447C),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            backgroundColor: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(28.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 64,
+                    height: 64,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFFFEBEB),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.logout_rounded,
+                      color: Color(0xFFD32F2F),
+                      size: 32,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Keluar Aplikasi?',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0C447C),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Anda akan keluar dari akun ini. Yakin ingin melanjutkan?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black54,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 46,
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                color: Color(0xFFB5D4F4),
+                                width: 1.5,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Batal',
+                              style: TextStyle(
+                                color: Color(0xFF185FA5),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: SizedBox(
+                          height: 46,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFFD32F2F), Color(0xFFE57373)],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                await ApiService().logout();
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginPage(),
+                                  ),
+                                  (route) => false,
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text(
+                                'Keluar',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+    );
+  }
+}
