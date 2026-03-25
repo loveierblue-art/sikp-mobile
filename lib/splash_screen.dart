@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_page.dart';
+import 'dart:math' as Math;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -70,6 +71,41 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
+  // Helper untuk membuat Bubble Gradient yang estetik
+  Widget _buildBlob(double size, Color color, {double top = 0, double right = 0, double? bottom, double? left}) {
+    return Positioned(
+      top: top,
+      right: right,
+      bottom: bottom,
+      left: left,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: RadialGradient(
+            colors: [color.withOpacity(0.2), color.withOpacity(0)],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWaveLoading() {
+  return AnimatedBuilder(
+    animation: _controller,
+    builder: (context, child) {
+      return Container(
+        width: 160,
+        height: 10,
+        child: CustomPaint(
+          painter: WavePainter(_controller.value),
+        ),
+      );
+    },
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,56 +114,20 @@ class _SplashScreenState extends State<SplashScreen>
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF0C447C), Color(0xFF185FA5), Color(0xFF378ADD)],
+            // GANTI: Sekarang menggunakan palet Hijau Tua Khairun
+            colors: [Color(0xFF337418), Color(0xFF1B4D0C)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
         ),
         child: Stack(
           children: [
-            // Lingkaran dekorasi kanan atas
-            Positioned(
-              top: -60,
-              right: -60,
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.05),
-                ),
-              ),
-            ),
+            // ── LAYER BACKGROUND: BLOB GRADIENT ──
+            _buildBlob(300, const Color(0xFF5DD62C), top: -100, right: -50), // Hijau Muda
+            _buildBlob(250, const Color(0xFFFFD700), bottom: -50, left: -50), // Gold
+            _buildBlob(150, Colors.white, top: 200, right: -30),
 
-            // Lingkaran dekorasi kiri bawah
-            Positioned(
-              bottom: -80,
-              left: -80,
-              child: Container(
-                width: 280,
-                height: 280,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.05),
-                ),
-              ),
-            ),
-
-            // Lingkaran dekorasi tengah kanan
-            Positioned(
-              top: 180,
-              right: -40,
-              child: Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.04),
-                ),
-              ),
-            ),
-
-            // Konten utama
+            // ── LAYER KONTEN UTAMA ──
             Center(
               child: AnimatedBuilder(
                 animation: _controller,
@@ -135,31 +135,41 @@ class _SplashScreenState extends State<SplashScreen>
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Logo
+                      // Logo dengan Background Glass tipis
                       FadeTransition(
                         opacity: _fadeAnim,
                         child: ScaleTransition(
                           scale: _scaleAnim,
                           child: Container(
-                            width: 100,
-                            height: 100,
+                            width: 110,
+                            height: 110,
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.15),
+                              // GANTI: Warna background glass sekarang Hijau Tua Khairun
+                              color: const Color(0xFF337418).withOpacity(0.5), 
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.3),
-                                width: 2,
+                                // GANTI: Warna border juga Hijau Tua yang lebih tipis
+                                color: const Color(0xFF337418).withOpacity(0.7),
+                                width: 1.5,
                               ),
+                              // Tambahkan Shadow lembut agar logonya lebih menonjol
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                             ),
                             child: const Icon(
                               Icons.school_rounded,
-                              size: 52,
-                              color: Colors.white,
+                              size: 56,
+                              color: Colors.white, // GANTI: Ikon Topi sekarang warna PUTIH bersih
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 28),
+                      const SizedBox(height: 32),
 
                       // Nama aplikasi
                       FadeTransition(
@@ -169,17 +179,16 @@ class _SplashScreenState extends State<SplashScreen>
                           child: const Text(
                             'SiKP',
                             style: TextStyle(
-                              fontSize: 42,
+                              fontSize: 48,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              letterSpacing: 4,
+                              letterSpacing: 6,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
-
-                      // Subtitle
+                      
+                      // Subtitle dengan aksen Gold
                       FadeTransition(
                         opacity: _fadeAnim,
                         child: Transform.translate(
@@ -188,41 +197,28 @@ class _SplashScreenState extends State<SplashScreen>
                             'Sistem Informasi Kerja Praktek',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white70,
-                              letterSpacing: 0.5,
+                              color: Color(0xFFFFD700), // Teks Gold lembut
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 1.2,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 80),
+                      const SizedBox(height: 100),
 
-                      // Loading indicator
+                      // Loading indicator (Ganti ke Gold agar terlihat mewah)
                       FadeTransition(
                         opacity: _fadeAnim,
                         child: Column(
                           children: [
-                            SizedBox(
-                              width: 140,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: LinearProgressIndicator(
-                                  backgroundColor: Colors.white.withOpacity(
-                                    0.2,
-                                  ),
-                                  valueColor:
-                                      const AlwaysStoppedAnimation<Color>(
-                                        Colors.white,
-                                      ),
-                                  minHeight: 3,
-                                ),
-                              ),
-                            ),
+                            _buildWaveLoading(), // Panggil fungsi gelombang di sini
                             const SizedBox(height: 16),
                             const Text(
-                              'Memuat aplikasi...',
+                              'Menghubungkan ke server...',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.white60,
+                                fontStyle: FontStyle.italic,
                               ),
                             ),
                           ],
@@ -234,7 +230,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
 
-            // Versi aplikasi di bawah
+            // Versi aplikasi
             Positioned(
               bottom: 40,
               left: 0,
@@ -242,9 +238,9 @@ class _SplashScreenState extends State<SplashScreen>
               child: FadeTransition(
                 opacity: _fadeAnim,
                 child: const Text(
-                  'v1.0.0',
+                  'Universitas Khairun • v1.0.0',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12, color: Colors.white38),
+                  style: TextStyle(fontSize: 11, color: Colors.white30, letterSpacing: 1),
                 ),
               ),
             ),
@@ -254,3 +250,51 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 }
+
+class WavePainter extends CustomPainter {
+  final double value;
+  WavePainter(this.value);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()
+      ..color = Colors.white // Warna Putih sesuai request kamu
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3.0
+      ..strokeCap = StrokeCap.round;
+
+    Path path = Path();
+    path.moveTo(0, size.height / 2);
+
+    for (double i = 0; i <= size.width; i++) {
+      // Logic gelombang: Sinusoida yang bergerak berdasarkan value controller
+      path.lineTo(
+        i,
+        size.height / 2 + (5 * Curves.easeInOut.transform(value) * (i / 20 + value * 10).remainder(2.0 * 3.14).sign * 0.5), 
+        // Note: Kamu bisa sederhanakan ini, tapi intinya dia membuat path meliuk
+      );
+      
+      // Cara yang lebih smooth:
+      double y = size.height / 2 + 4 * (i / 20 + value * 5).remainder(6.28);
+      // Tapi untuk kemudahan, mari pakai sinus sederhana:
+      double dy = 4 * (i / 15 + value * 10);
+      path.lineTo(i, size.height / 2 + (3 * (i % 20 < 10 ? 1 : -1)));
+    }
+    
+    // Versi Sinus murni agar lebih bergelombang cantik:
+    path = Path();
+    for (double i = 0; i <= size.width; i++) {
+      double y = size.height / 2 + 4 * Math.sin((i / size.width * 2 * 3.14) + (value * 10));
+      if (i == 0) path.moveTo(i, y);
+      else path.lineTo(i, y);
+    }
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+// Tambahkan import math di paling atas file:
+// import 'dart:math' as Math;

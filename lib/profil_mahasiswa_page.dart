@@ -45,272 +45,275 @@ class _ProfilMahasiswaPageState extends State<ProfilMahasiswaPage> {
     final String dosenPembimbing = _pengajuanKP?['dosenPembimbing'] ?? '-';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFE6F1FB),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF185FA5), Color(0xFF378ADD)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(36),
-                  bottomRight: Radius.circular(36),
+      backgroundColor: const Color(0xFFF8FAF8), // Mengikuti tema dashboard hijau
+      body: Stack(
+        children: [
+          // ── Efek Blob (Tumpukan lingkaran gradasi di belakang) ──
+          Positioned(
+            top: -50,
+            right: -50,
+            child: Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    const Color(0xFF337418).withOpacity(0.15),
+                    const Color(0xFF337418).withOpacity(0),
+                  ],
                 ),
               ),
-              padding: const EdgeInsets.only(
-                top: 64,
-                bottom: 40,
-                left: 24,
-                right: 24,
+            ),
+          ),
+          Positioned(
+            bottom: 100,
+            left: -80,
+            child: Container(
+              width: 300,
+              height: 300,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    const Color(0xFFFFD700).withOpacity(0.12), // Kuning Gold
+                    const Color(0xFFFFD700).withOpacity(0),
+                  ],
+                ),
               ),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        width: 38,
-                        height: 38,
+            ),
+          ),
+
+          // ── Konten Utama ──
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                // Header (Ganti ke Gradasi Hijau Tua)
+                Container(
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF337418), Color(0xFF458C26)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(36),
+                      bottomRight: Radius.circular(36),
+                    ),
+                  ),
+                  padding: const EdgeInsets.only(top: 64, bottom: 40, left: 24, right: 24),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Container(
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.arrow_back_ios_new_rounded,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        width: 80,
+                        height: 80,
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
-                          Icons.arrow_back_ios_new_rounded,
+                          Icons.person_rounded,
+                          size: 44,
                           color: Colors.white,
-                          size: 18,
                         ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.person_rounded,
-                      size: 44,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    nama,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'NPM: $npm',
-                    style: const TextStyle(fontSize: 13, color: Colors.white70),
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      status,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            _isLoading
-                ? const Padding(
-                  padding: EdgeInsets.all(40),
-                  child: CircularProgressIndicator(color: Color(0xFF185FA5)),
-                )
-                : Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionTitle(
-                        'Status Kerja Praktek',
-                        Icons.work_outline_rounded,
-                        const Color(0xFF185FA5),
                       ),
                       const SizedBox(height: 12),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
+                      Text(
+                        nama,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFFB5D4F4),
-                            width: 1,
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            _buildInfoRow(
-                              Icons.hourglass_empty_rounded,
-                              'Status KP',
-                              status,
-                              valueColor: _getStatusColor(status),
-                            ),
-                            const Divider(height: 24, color: Color(0xFFE6F1FB)),
-                            _buildInfoRow(
-                              Icons.business_outlined,
-                              'Instansi',
-                              instansi,
-                            ),
-                            const Divider(height: 24, color: Color(0xFFE6F1FB)),
-                            _buildInfoRow(
-                              Icons.school_outlined,
-                              'Dosen Pembimbing',
-                              dosenPembimbing,
-                            ),
-                          ],
                         ),
                       ),
-                      const SizedBox(height: 28),
-
-                      _buildSectionTitle(
-                        'Data Diri',
-                        Icons.person_outline_rounded,
-                        const Color(0xFF185FA5),
+                      const SizedBox(height: 4),
+                      Text(
+                        'NPM: $npm',
+                        style: const TextStyle(fontSize: 13, color: Colors.white70),
                       ),
                       const SizedBox(height: 12),
+                      // Badge "Mahasiswa" (Sekarang Kuning Gold)
                       Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFFB5D4F4),
-                            width: 1,
+                          color: const Color(0xFFFFD700).withOpacity(0.9), // Kuning Gold
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          status, // Menampilkan status tapi dengan tema warna gold
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF337418), // Teks hijau tua di atas gold
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        child: Column(
-                          children: [
-                            _buildInfoRow(Icons.badge_outlined, 'NPM', npm),
-                            const Divider(height: 24, color: Color(0xFFE6F1FB)),
-                            _buildInfoRow(
-                              Icons.person_outline_rounded,
-                              'Nama',
-                              nama,
-                            ),
-                            const Divider(height: 24, color: Color(0xFFE6F1FB)),
-                            _buildInfoRow(Icons.email_outlined, 'Email', email),
-                            const Divider(height: 24, color: Color(0xFFE6F1FB)),
-                            _buildInfoRow(
-                              Icons.phone_outlined,
-                              'No. Telepon',
-                              noTelp,
-                            ),
-                          ],
-                        ),
                       ),
-                      const SizedBox(height: 28),
-
-                      _buildSectionTitle(
-                        'Data Partner KP',
-                        Icons.people_rounded,
-                        const Color(0xFF0F6E56),
-                      ),
-                      const SizedBox(height: 12),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFFB5D4F4),
-                            width: 1,
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            _buildInfoRow(
-                              Icons.badge_outlined,
-                              'NPM',
-                              npmPartner,
-                            ),
-                            const Divider(height: 24, color: Color(0xFFE6F1FB)),
-                            _buildInfoRow(
-                              Icons.person_outline_rounded,
-                              'Nama',
-                              namaPartner,
-                            ),
-                            const Divider(height: 24, color: Color(0xFFE6F1FB)),
-                            _buildInfoRow(
-                              Icons.phone_outlined,
-                              'No. Telepon',
-                              noTelpPartner,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 28),
-
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFAEEDA),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: const Color(0xFFF9A825).withOpacity(0.3),
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Icon(
-                              Icons.info_outline_rounded,
-                              color: Color(0xFF854F0B),
-                              size: 20,
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                'Untuk mengubah data profil, silakan hubungi dosen pembimbing Anda. Perubahan data hanya dapat dilakukan oleh dosen.',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color(0xFF854F0B),
-                                  height: 1.5,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 24),
                     ],
                   ),
                 ),
-          ],
-        ),
+
+                _isLoading
+                    ? const Padding(
+                        padding: EdgeInsets.all(40),
+                        child: CircularProgressIndicator(color: Color(0xFF337418)),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // ── Status Kerja Praktek ──
+                            _buildSectionTitle(
+                              'Status Kerja Praktek',
+                              Icons.work_outline_rounded,
+                              const Color(0xFF337418), // Warna Hijau Tua
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.8), // Glassmorphism
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: const Color(0xFF337418).withOpacity(0.1),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  _buildInfoRow(
+                                    Icons.hourglass_empty_rounded,
+                                    'Status KP',
+                                    status,
+                                    valueColor: _getStatusColor(status),
+                                  ),
+                                  const Divider(height: 24, color: Color(0xFFE8F5E9)),
+                                  _buildInfoRow(Icons.business_outlined, 'Instansi', instansi),
+                                  const Divider(height: 24, color: Color(0xFFE8F5E9)),
+                                  _buildInfoRow(Icons.school_outlined, 'Dosen Pembimbing', dosenPembimbing),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 28),
+
+                            // ── Data Diri ──
+                            _buildSectionTitle(
+                              'Data Diri',
+                              Icons.person_outline_rounded,
+                              const Color(0xFF337418), // Warna Hijau Tua
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.8), // Glassmorphism
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: const Color(0xFF337418).withOpacity(0.1),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  _buildInfoRow(Icons.badge_outlined, 'NPM', npm),
+                                  const Divider(height: 24, color: Color(0xFFE8F5E9)),
+                                  _buildInfoRow(Icons.person_outline_rounded, 'Nama', nama),
+                                  const Divider(height: 24, color: Color(0xFFE8F5E9)),
+                                  _buildInfoRow(Icons.email_outlined, 'Email', email),
+                                  const Divider(height: 24, color: Color(0xFFE8F5E9)),
+                                  _buildInfoRow(Icons.phone_outlined, 'No. Telepon', noTelp),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 28),
+
+                            // ── Data Partner KP ──
+                            _buildSectionTitle(
+                              'Data Partner KP',
+                              Icons.people_rounded,
+                              const Color(0xFF337418), // Warna Hijau Tua
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.8), // Glassmorphism
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: const Color(0xFF337418).withOpacity(0.1),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  _buildInfoRow(Icons.badge_outlined, 'NPM', npmPartner),
+                                  const Divider(height: 24, color: Color(0xFFE8F5E9)),
+                                  _buildInfoRow(Icons.person_outline_rounded, 'Nama', namaPartner),
+                                  const Divider(height: 24, color: Color(0xFFE8F5E9)),
+                                  _buildInfoRow(Icons.phone_outlined, 'No. Telepon', noTelpPartner),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 28),
+
+                            // Catatan Info
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFAEEDA),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: const Color(0xFFFFD700).withOpacity(0.3),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Icon(Icons.info_outline_rounded, color: Color(0xFF854F0B), size: 20),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      'Untuk mengubah data profil, silakan hubungi dosen pembimbing Anda. Perubahan data hanya dapat dilakukan oleh dosen.',
+                                      style: TextStyle(fontSize: 12, color: Color(0xFF854F0B), height: 1.5),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                          ],
+                        ),
+                      ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -333,37 +336,28 @@ class _ProfilMahasiswaPageState extends State<ProfilMahasiswaPage> {
           style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF0C447C),
+            color: Color(0xFF1B5E20), // Hijau gelap mengikuti tema
           ),
         ),
       ],
     );
   }
 
-  Widget _buildInfoRow(
-    IconData icon,
-    String label,
-    String value, {
-    Color? valueColor,
-  }) {
+  Widget _buildInfoRow(IconData icon, String label, String value, {Color? valueColor}) {
     return Row(
       children: [
-        Icon(icon, color: const Color(0xFF378ADD), size: 20),
+        Icon(icon, color: const Color(0xFFFFD700), size: 20), // Ikon menu ke Kuning Gold
         const SizedBox(width: 12),
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 13,
-            color: Colors.black45,
-            fontWeight: FontWeight.w500,
-          ),
+          style: const TextStyle(fontSize: 13, color: Colors.black45, fontWeight: FontWeight.w500),
         ),
         const Spacer(),
         Text(
           value,
           style: TextStyle(
             fontSize: 13,
-            color: valueColor ?? const Color(0xFF0C447C),
+            color: valueColor ?? const Color(0xFF1B5E20),
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -380,7 +374,7 @@ class _ProfilMahasiswaPageState extends State<ProfilMahasiswaPage> {
       case 'menunggu':
         return const Color(0xFFF9A825);
       default:
-        return const Color(0xFF378ADD);
+        return const Color(0xFF337418); // Default ke hijau tua
     }
   }
 }

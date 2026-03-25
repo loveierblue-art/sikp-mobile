@@ -128,34 +128,15 @@ class ApiService {
   // ==================================================
   // FORGOT PASSWORD
   // ==================================================
-  Future<Map<String, dynamic>> forgotPassword(
-    String id,
-    String newPassword,
-  ) async {
-    try {
-      // Cari user berdasarkan id_user
-      final query =
-          await _firestore
-              .collection('users')
-              .where('id_user', isEqualTo: id)
-              .get();
-
-      if (query.docs.isEmpty) {
-        return {
-          'success': false,
-          'message': 'NPM/NIDN tidak ditemukan di sistem.',
-        };
-      }
-
-      final userData = query.docs.first.data();
-      final String email = userData['email'];
+  Future<Map<String, dynamic>> sendResetPasswordEmail(String email) async {
+  try {
 
       // Kirim email reset password
       await _auth.sendPasswordResetEmail(email: email);
       return {
         'success': true,
         'message':
-            'Link reset password telah dikirim ke email $email. Silakan cek inbox Anda.',
+            'Link reset password telah dikirim ke email $email. Silakan cek inbox/spam Anda.',
       };
     } on FirebaseAuthException catch (e) {
       return {'success': false, 'message': 'Terjadi kesalahan: ${e.message}'};

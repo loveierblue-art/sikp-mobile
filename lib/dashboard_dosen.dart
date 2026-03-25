@@ -4,6 +4,7 @@ import 'login_page.dart';
 import 'detail_pengajuan_page.dart';
 import 'pembimbing_page.dart';
 import 'list_pengajuan_page.dart';
+import 'notification_page.dart'; // Tambahkan import ini
 
 class DashboardDosen extends StatefulWidget {
   const DashboardDosen({super.key});
@@ -33,13 +34,31 @@ class _DashboardDosenState extends State<DashboardDosen> {
     }
   }
 
+  Widget _buildBackgroundBlob(double size, Color color, Alignment alignment) {
+    return Align(
+      alignment: alignment,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: RadialGradient(
+            colors: [
+              color.withOpacity(0.15),
+              color.withOpacity(0.0),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = ApiService.currentUser;
     final String nama = user?['name'] ?? 'Dosen';
     final String nidn = user?['id_user'] ?? '-';
     final String email = user?['email'] ?? '-';
-
     final int totalPengajuan = _pengajuanList.length;
     final int menunggu =
         _pengajuanList.where((p) => p['status'] == 'Menunggu').length;
@@ -47,396 +66,401 @@ class _DashboardDosenState extends State<DashboardDosen> {
         _pengajuanList.where((p) => p['status'] == 'Disetujui').length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFE6F1FB),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // ── Header ──
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF0C447C), Color(0xFF185FA5)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(36),
-                  bottomRight: Radius.circular(36),
-                ),
-              ),
-              padding: const EdgeInsets.only(
-                top: 64,
-                bottom: 32,
-                left: 24,
-                right: 24,
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: const Color(0xFFF8F8F8),
+      body: Stack(
+        children: [
+          _buildBackgroundBlob(300, const Color(0xFF337418), const Alignment(-1.1, -1.0)),
+          _buildBackgroundBlob(250, const Color(0xFF5DD62C), const Alignment(1.1, 0.4)),
+          _buildBackgroundBlob(200, const Color(0xFFFFD700), const Alignment(-1.0, 1.1)),
+
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF337418), Color(0xFF1B4D0C)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(36),
+                      bottomRight: Radius.circular(36),
+                    ),
+                  ),
+                  padding: const EdgeInsets.only(
+                    top: 64,
+                    bottom: 32,
+                    left: 24,
+                    right: 24,
+                  ),
+                  child: Column(
                     children: [
-                      const Text(
-                        'SiKP',
-                        style: TextStyle(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'SiKP',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              letterSpacing: 1.0,
+                            ),
+                          ),
+                          // --- Tombol Notifikasi & Logout ---
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const NotificationPage()),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: 38,
+                                      height: 38,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.2),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                        Icons.notifications_none_rounded,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                    ),
+                                    // Dot Notifikasi Merah
+                                    Positioned(
+                                      right: 2,
+                                      top: 2,
+                                      child: Container(
+                                        width: 10,
+                                        height: 10,
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(color: const Color(0xFF337418), width: 1.5),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              GestureDetector(
+                                onTap: () => _showLogoutDialog(context),
+                                child: Container(
+                                  width: 38,
+                                  height: 38,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.logout_rounded,
+                                    color: Colors.white,
+                                    size: 18,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      Container(
+                        width: 72,
+                        height: 72,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.person_rounded,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        nama,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          letterSpacing: 1.0,
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () => _showLogoutDialog(context),
-                        child: Container(
-                          width: 38,
-                          height: 38,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.logout_rounded,
-                            color: Colors.white,
-                            size: 18,
+                      const SizedBox(height: 4),
+                      Text('NIDN: $nidn',
+                          style: const TextStyle(fontSize: 13, color: Colors.white70)),
+                      const SizedBox(height: 4),
+                      Text(email,
+                          style: const TextStyle(fontSize: 13, color: Colors.white70)),
+                      const SizedBox(height: 16),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFD700).withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          'Dosen',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFFFFD700),
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          _buildStatCard('$totalPengajuan', 'Pengajuan\nMasuk'),
+                          const SizedBox(width: 12),
+                          _buildStatCard('$menunggu', 'Menunggu\nPersetujuan'),
+                          const SizedBox(width: 12),
+                          _buildStatCard('$disetujui', 'KP\nDisetujui'),
+                        ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
-                  Container(
-                    width: 72,
-                    height: 72,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.person_rounded,
-                      size: 40,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    nama,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'NIDN: $nidn',
-                    style: const TextStyle(fontSize: 13, color: Colors.white70),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    email,
-                    style: const TextStyle(fontSize: 13, color: Colors.white70),
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Text(
-                      'Dosen',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Menu',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF337418),
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Statistik
-                  Row(
-                    children: [
-                      _buildStatCard('$totalPengajuan', 'Pengajuan\nMasuk'),
-                      const SizedBox(width: 12),
-                      _buildStatCard('$menunggu', 'Menunggu\nPersetujuan'),
-                      const SizedBox(width: 12),
-                      _buildStatCard('$disetujui', 'KP\nDisetujui'),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ── Menu ──
-                  const Text(
-                    'Menu',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF0C447C),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 1.1,
-                    children: [
-                      _buildMenuCard(
-                        icon: Icons.inbox_rounded,
-                        label: 'Pengajuan KP',
-                        subtitle: 'Lihat pengajuan masuk',
-                        color: const Color(0xFF185FA5),
-                        bgColor: const Color(0xFFE6F1FB),
-                        onTap:
-                            () => Navigator.push(
+                      const SizedBox(height: 12),
+                      GridView.count(
+                        crossAxisCount: 2,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 1.1,
+                        children: [
+                          _buildMenuCard(
+                            icon: Icons.inbox_rounded,
+                            label: 'Pengajuan KP',
+                            subtitle: 'Lihat pengajuan masuk',
+                            color: const Color(0xFF337418),
+                            bgColor: const Color(0xFFF0FDF4),
+                            onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const ListPengajuanPage(),
                               ),
                             ).then((_) => _loadPengajuan()),
-                      ),
-                      _buildMenuCard(
-                        icon: Icons.supervisor_account_rounded,
-                        label: 'Pembimbing',
-                        subtitle: 'Tentukan dosen pembimbing',
-                        color: const Color(0xFF0F6E56),
-                        bgColor: const Color(0xFFE1F5EE),
-                        onTap:
-                            () => Navigator.push(
+                          ),
+                          _buildMenuCard(
+                            icon: Icons.supervisor_account_rounded,
+                            label: 'Pembimbing',
+                            subtitle: 'Tentukan dosen pembimbing',
+                            color: const Color(0xFF5DD62C),
+                            bgColor: const Color(0xFFF0FDF4),
+                            onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const PembimbingPage(),
                               ),
                             ),
-                      ),
-                      _buildMenuCard(
-                        icon: Icons.task_alt_rounded,
-                        label: 'Setujui Berkas',
-                        subtitle: 'Review & setujui dokumen',
-                        color: const Color(0xFF854F0B),
-                        bgColor: const Color(0xFFFAEEDA),
-                        onTap: () {},
-                      ),
-                      _buildMenuCard(
-                        icon: Icons.person_outline_rounded,
-                        label: 'Profil',
-                        subtitle: 'Data diri dosen',
-                        color: const Color(0xFF6B2FA0),
-                        bgColor: const Color(0xFFF3E8FF),
-                        onTap: () {},
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 28),
-
-                  // ── Pengajuan Terbaru ──
-                  const Text(
-                    'Pengajuan Terbaru',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF0C447C),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  _isLoading
-                      ? const Center(
-                        child: CircularProgressIndicator(
-                          color: Color(0xFF185FA5),
-                        ),
-                      )
-                      : _pengajuanList.isEmpty
-                      ? Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFFB5D4F4),
-                            width: 1,
                           ),
+                        ],
+                      ),
+                      const SizedBox(height: 28),
+                      const Text(
+                        'Pengajuan Terbaru',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF337418),
                         ),
-                        child: const Column(
-                          children: [
-                            Icon(
-                              Icons.inbox_outlined,
-                              size: 48,
-                              color: Color(0xFFB5D4F4),
-                            ),
-                            SizedBox(height: 12),
-                            Text(
-                              'Belum ada pengajuan masuk',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF0C447C),
+                      ),
+                      const SizedBox(height: 12),
+                      _isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                color: Color(0xFF337418),
                               ),
-                            ),
-                          ],
-                        ),
-                      )
-                      : Column(
-                        children:
-                            _pengajuanList.map((pengajuan) {
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: GestureDetector(
-                                  onTap:
-                                      () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (context) => DetailPengajuanPage(
-                                                pengajuan: pengajuan,
-                                              ),
-                                        ),
-                                      ).then((_) => _loadPengajuan()),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(16),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(
-                                        color: const Color(0xFFB5D4F4),
-                                        width: 1,
-                                      ),
+                            )
+                          : _pengajuanList.isEmpty
+                              ? Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.8),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: const Color(0xFF337418).withOpacity(0.1),
+                                      width: 1,
                                     ),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 44,
-                                          height: 44,
-                                          decoration: BoxDecoration(
-                                            color: _getStatusBgColor(
-                                              pengajuan['status'] ?? '',
-                                            ),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(
-                                            _getStatusIcon(
-                                              pengajuan['status'] ?? '',
-                                            ),
-                                            color: _getStatusColor(
-                                              pengajuan['status'] ?? '',
-                                            ),
-                                            size: 22,
-                                          ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.inbox_outlined,
+                                        size: 48,
+                                        color: const Color(0xFF337418).withOpacity(0.1),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      const Text(
+                                        'Belum ada pengajuan masuk',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xFF337418),
                                         ),
-                                        const SizedBox(width: 12),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Column(
+                                  children: _pengajuanList.map((pengajuan) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(bottom: 12),
+                                      child: GestureDetector(
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                DetailPengajuanPage(pengajuan: pengajuan),
+                                          ),
+                                        ).then((_) => _loadPengajuan()),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withOpacity(0.8),
+                                            borderRadius: BorderRadius.circular(16),
+                                            border: Border.all(
+                                              color: const Color(0xFF337418).withOpacity(0.1),
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: Row(
                                             children: [
-                                              Text(
-                                                pengajuan['nama'] ?? '-',
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Color(0xFF0C447C),
+                                              Container(
+                                                width: 44,
+                                                height: 44,
+                                                decoration: BoxDecoration(
+                                                  color: _getStatusBgColor(
+                                                      pengajuan['status'] ?? ''),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(
+                                                  _getStatusIcon(pengajuan['status'] ?? ''),
+                                                  color: _getStatusColor(
+                                                      pengajuan['status'] ?? ''),
+                                                  size: 22,
                                                 ),
                                               ),
-                                              const SizedBox(height: 2),
-                                              Text(
-                                                pengajuan['instansi'] ?? '-',
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.black45,
+                                              const SizedBox(width: 12),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      pengajuan['nama'] ?? '-',
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight: FontWeight.w600,
+                                                        color: Color(0xFF337418),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 2),
+                                                    Text(
+                                                      pengajuan['instansi'] ?? '-',
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.black45,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                  horizontal: 10,
+                                                  vertical: 4,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: _getStatusBgColor(
+                                                      pengajuan['status'] ?? ''),
+                                                  borderRadius: BorderRadius.circular(20),
+                                                ),
+                                                child: Text(
+                                                  pengajuan['status'] ?? 'Menunggu',
+                                                  style: TextStyle(
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: _getStatusColor(
+                                                        pengajuan['status'] ?? ''),
+                                                  ),
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10,
-                                            vertical: 4,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: _getStatusBgColor(
-                                              pengajuan['status'] ?? '',
-                                            ),
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            pengajuan['status'] ?? 'Menunggu',
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w600,
-                                              color: _getStatusColor(
-                                                pengajuan['status'] ?? '',
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
-                              );
-                            }).toList(),
-                      ),
-                  const SizedBox(height: 28),
-
-                  // ── Profil ──
-                  const Text(
-                    'Informasi Profil',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF0C447C),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: const Color(0xFFB5D4F4),
-                        width: 1,
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        _buildProfilRow(Icons.badge_outlined, 'NIDN', nidn),
-                        const Divider(height: 24, color: Color(0xFFE6F1FB)),
-                        _buildProfilRow(
-                          Icons.person_outline_rounded,
-                          'Nama',
-                          nama,
+                      const SizedBox(height: 28),
+                      const Text(
+                        'Informasi Profil',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF337418),
                         ),
-                        const Divider(height: 24, color: Color(0xFFE6F1FB)),
-                        _buildProfilRow(Icons.email_outlined, 'Email', email),
-                        const Divider(height: 24, color: Color(0xFFE6F1FB)),
-                        _buildProfilRow(Icons.school_outlined, 'Role', 'Dosen'),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 12),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: const Color(0xFF337418).withOpacity(0.1),
+                            width: 1,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            _buildProfilRow(Icons.badge_outlined, 'NIDN', nidn),
+                            const Divider(height: 24, color: Color(0xFFF0FDF4)),
+                            _buildProfilRow(Icons.person_outline_rounded, 'Nama', nama),
+                            const Divider(height: 24, color: Color(0xFFF0FDF4)),
+                            _buildProfilRow(Icons.email_outlined, 'Email', email),
+                            const Divider(height: 24, color: Color(0xFFF0FDF4)),
+                            _buildProfilRow(Icons.school_outlined, 'Role', 'Dosen'),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
                   ),
-                  const SizedBox(height: 24),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -444,26 +468,26 @@ class _DashboardDosenState extends State<DashboardDosen> {
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'disetujui':
-        return const Color(0xFF2E7D32);
+        return const Color(0xFF337418);
       case 'ditolak':
         return const Color(0xFFD32F2F);
       case 'menunggu':
-        return const Color(0xFFF9A825);
+        return const Color(0xFFFFD700);
       default:
-        return const Color(0xFF378ADD);
+        return const Color(0xFF202020);
     }
   }
 
   Color _getStatusBgColor(String status) {
     switch (status.toLowerCase()) {
       case 'disetujui':
-        return const Color(0xFFE8F5E9);
+        return const Color(0xFFF0FDF4);
       case 'ditolak':
         return const Color(0xFFFFEBEB);
       case 'menunggu':
         return const Color(0xFFFFF8E1);
       default:
-        return const Color(0xFFE6F1FB);
+        return const Color(0xFFF8F8F8);
     }
   }
 
@@ -527,9 +551,12 @@ class _DashboardDosenState extends State<DashboardDosen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.white.withOpacity(0.8),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFB5D4F4), width: 1),
+          border: Border.all(
+            color: const Color(0xFF337418).withOpacity(0.1),
+            width: 1,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -549,7 +576,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF0C447C),
+                color: Color(0xFF337418),
               ),
             ),
             const SizedBox(height: 2),
@@ -566,7 +593,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
   Widget _buildProfilRow(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, color: const Color(0xFF378ADD), size: 20),
+        Icon(icon, color: const Color(0xFF337418), size: 20),
         const SizedBox(width: 12),
         Text(
           label,
@@ -581,7 +608,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
           value,
           style: const TextStyle(
             fontSize: 13,
-            color: Color(0xFF0C447C),
+            color: Color(0xFF337418),
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -592,124 +619,119 @@ class _DashboardDosenState extends State<DashboardDosen> {
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder:
-          (context) => Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(28.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(28.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 64,
+                height: 64,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFFEBEB),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.logout_rounded,
+                  color: Color(0xFFD32F2F),
+                  size: 32,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Keluar Aplikasi?',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF337418),
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Anda akan keluar dari akun ini. Yakin ingin melanjutkan?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
                 children: [
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFFFEBEB),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.logout_rounded,
-                      color: Color(0xFFD32F2F),
-                      size: 32,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Keluar Aplikasi?',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF0C447C),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Anda akan keluar dari akun ini. Yakin ingin melanjutkan?',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black54,
-                      height: 1.5,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: 46,
-                          child: OutlinedButton(
-                            onPressed: () => Navigator.pop(context),
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(
-                                color: Color(0xFFB5D4F4),
-                                width: 1.5,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: const Text(
-                              'Batal',
-                              style: TextStyle(
-                                color: Color(0xFF185FA5),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                  Expanded(
+                    child: SizedBox(
+                      height: 46,
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(
+                            color: Color(0xFF337418),
+                            width: 1.5,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Batal',
+                          style: TextStyle(
+                            color: Color(0xFF337418),
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: SizedBox(
-                          height: 46,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFFD32F2F), Color(0xFFE57373)],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                              ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: SizedBox(
+                      height: 46,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFD32F2F), Color(0xFFE57373)],
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await ApiService().logout();
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => LoginPage()),
+                              (route) => false,
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                await ApiService().logout();
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LoginPage(),
-                                  ),
-                                  (route) => false,
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: const Text(
-                                'Keluar',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
+                          ),
+                          child: const Text(
+                            'Keluar',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),
-            ),
+            ],
           ),
+        ),
+      ),
     );
   }
 }

@@ -76,8 +76,8 @@ class _DownloadSuratPageState extends State<DownloadSuratPage> {
       {
         'judul': 'Formulir Permohonan\nKerja Praktek',
         'icon': Icons.assignment_outlined,
-        'color': const Color(0xFF185FA5),
-        'bgColor': const Color(0xFFE6F1FB),
+        'color': const Color(0xFF337418),
+        'bgColor': const Color(0xFFE8F5E9),
         'keterangan': 'Formulir pengajuan KP ke instansi',
         'onPreview':
             sudahDisetujui
@@ -164,254 +164,220 @@ class _DownloadSuratPageState extends State<DownloadSuratPage> {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFE6F1FB),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // ── Header ──
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF185FA5), Color(0xFF378ADD)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(36),
-                  bottomRight: Radius.circular(36),
+      backgroundColor: const Color(0xFFF8FAF8), // Background mengikuti tema hijau
+      body: Stack(
+        children: [
+          // ── Efek Blob (Tambah tumpukan lingkaran gradasi) ──
+          Positioned(
+            top: -40,
+            right: -40,
+            child: Container(
+              width: 220,
+              height: 220,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [const Color(0xFF337418).withOpacity(0.15), const Color(0xFF337418).withOpacity(0)],
                 ),
               ),
-              padding: const EdgeInsets.only(
-                top: 64,
-                bottom: 40,
-                left: 24,
-                right: 24,
+            ),
+          ),
+          Positioned(
+            bottom: 120,
+            left: -60,
+            child: Container(
+              width: 280,
+              height: 280,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [const Color(0xFFFFD700).withOpacity(0.12), const Color(0xFFFFD700).withOpacity(0)],
+                ),
               ),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        width: 38,
-                        height: 38,
+            ),
+          ),
+
+          // ── Konten Asli ──
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                // Header (Biru diganti ke Gradasi Hijau Tua)
+                Container(
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF337418), Color(0xFF458C26)], // Gradasi Hijau
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(36),
+                      bottomRight: Radius.circular(36),
+                    ),
+                  ),
+                  padding: const EdgeInsets.only(top: 64, bottom: 40, left: 24, right: 24),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Container(
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        width: 64,
+                        height: 64,
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: Colors.white,
-                          size: 18,
-                        ),
+                        child: const Icon(Icons.download_rounded, size: 32, color: Colors.white),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.download_rounded,
-                      size: 32,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  const Text(
-                    'Download Surat',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  const Text(
-                    'Tap surat untuk preview sebelum download',
-                    style: TextStyle(fontSize: 13, color: Colors.white70),
-                  ),
-                ],
-              ),
-            ),
-
-            // ── Konten ──
-            _isLoading
-                ? const Padding(
-                  padding: EdgeInsets.all(40),
-                  child: CircularProgressIndicator(color: Color(0xFF185FA5)),
-                )
-                : Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Banner belum disetujui
-                      if (!sudahDisetujui)
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(16),
-                          margin: const EdgeInsets.only(bottom: 20),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFEBEB),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: const Color(0xFFD32F2F).withOpacity(0.3),
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            children: const [
-                              Icon(
-                                Icons.lock_outline_rounded,
-                                color: Color(0xFFD32F2F),
-                                size: 20,
-                              ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: Text(
-                                  'Surat belum tersedia. Pengajuan KP Anda belum disetujui oleh Koordinator KP.',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xFFD32F2F),
-                                    height: 1.5,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
+                      const SizedBox(height: 14),
                       const Text(
-                        'Surat Tersedia',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF0C447C),
-                        ),
+                        'Download Surat',
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 0.5),
                       ),
-                      const SizedBox(height: 12),
-                      ...daftarSurat.map(
-                        (surat) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: GestureDetector(
-                            onTap: surat['onPreview'],
-                            child: Opacity(
-                              opacity: sudahDisetujui ? 1.0 : 0.5,
-                              child: Container(
-                                padding: const EdgeInsets.all(20),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Tap surat untuk preview sebelum download',
+                        style: TextStyle(fontSize: 13, color: Colors.white70),
+                      ),
+                    ],
+                  ),
+                ),
+
+                _isLoading
+                    ? const Padding(
+                        padding: EdgeInsets.all(40),
+                        child: CircularProgressIndicator(color: Color(0xFF337418)),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (!sudahDisetujui)
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(16),
+                                margin: const EdgeInsets.only(bottom: 20),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                    color: const Color(0xFFB5D4F4),
-                                    width: 1,
-                                  ),
+                                  color: const Color(0xFFFFEBEB),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: const Color(0xFFD32F2F).withOpacity(0.3), width: 1),
                                 ),
                                 child: Row(
-                                  children: [
-                                    Container(
-                                      width: 52,
-                                      height: 52,
-                                      decoration: BoxDecoration(
-                                        color: surat['bgColor'],
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Icon(
-                                        surat['icon'],
-                                        color: surat['color'],
-                                        size: 26,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
+                                  children: const [
+                                    Icon(Icons.lock_outline_rounded, color: Color(0xFFD32F2F), size: 20),
+                                    SizedBox(width: 10),
                                     Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            surat['judul'],
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                              color: Color(0xFF0C447C),
-                                              height: 1.3,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            surat['keterangan'],
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black45,
-                                            ),
-                                          ),
-                                        ],
+                                      child: Text(
+                                        'Surat belum tersedia. Pengajuan KP Anda belum disetujui oleh Koordinator KP.',
+                                        style: TextStyle(fontSize: 12, color: Color(0xFFD32F2F), height: 1.5),
                                       ),
-                                    ),
-                                    Icon(
-                                      sudahDisetujui
-                                          ? Icons.arrow_forward_ios_rounded
-                                          : Icons.lock_outline_rounded,
-                                      color: const Color(0xFF378ADD),
-                                      size: 16,
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                      ),
 
-                      const SizedBox(height: 16),
-
-                      // Catatan
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFAEEDA),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: const Color(0xFFF9A825).withOpacity(0.3),
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Icon(
-                              Icons.info_outline_rounded,
-                              color: Color(0xFF854F0B),
-                              size: 20,
+                            const Text(
+                              'Surat Tersedia',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF337418)), // Warna Hijau
                             ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                'Surat hanya tersedia setelah pengajuan KP disetujui oleh Koordinator Kerja Praktek.',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color(0xFF854F0B),
-                                  height: 1.5,
+                            const SizedBox(height: 12),
+                            ...daftarSurat.map(
+                              (surat) => Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: GestureDetector(
+                                  onTap: surat['onPreview'],
+                                  child: Opacity(
+                                    opacity: sudahDisetujui ? 1.0 : 0.5,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(20),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.8), // Glassmorphism Opacity 0.8
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 52,
+                                            height: 52,
+                                            decoration: BoxDecoration(
+                                              color: surat['bgColor'],
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                            child: Icon(surat['icon'], color: surat['color'], size: 26),
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  surat['judul'],
+                                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF337418), height: 1.3),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(surat['keterangan'], style: const TextStyle(fontSize: 12, color: Colors.black45)),
+                                              ],
+                                            ),
+                                          ),
+                                          Icon(
+                                            sudahDisetujui ? Icons.arrow_forward_ios_rounded : Icons.lock_outline_rounded,
+                                            color: const Color(0xFFFFD700), // Badge/Ikon ke Kuning Gold
+                                            size: 16,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            // Catatan (Tetap Gold sesuai dashboard)
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFAEEDA),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: const Color(0xFFF9A825).withOpacity(0.3), width: 1),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Icon(Icons.info_outline_rounded, color: Color(0xFF854F0B), size: 20),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      'Surat hanya tersedia setelah pengajuan KP disetujui oleh Koordinator Kerja Praktek.',
+                                      style: TextStyle(fontSize: 12, color: Color(0xFF854F0B), height: 1.5),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-          ],
-        ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
