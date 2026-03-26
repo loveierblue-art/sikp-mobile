@@ -1,52 +1,20 @@
 import 'package:flutter/material.dart';
-import 'services/api_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart'; // Tambahkan package intl di pubspec.yaml jika belum ada
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    //CEK SIAPA YANG LAGI LOGIN (Dosen atau Mahasiswa)
-    final user = ApiService.currentUser;
-    final String role = user?['role']?.toLowerCase() ?? 'mahasiswa';
-
-    //BEDAKAN DATA NOTIFIKASI BERDASARKAN ROLE
-    final List<Map<String, dynamic>> notifications = (role == 'dosen') 
-      ? [
-          {
-            'title': 'Pengajuan Baru',
-            'desc': 'Mahasiswa atas nama Muhammad Iki telah mengajukan KP baru.',
-            'time': '10 menit yang lalu',
-            'type': 'info', // Gold
-          },
-          {
-            'title': 'Update Berkas',
-            'desc': 'Fatimah telah mengunggah revisi laporan untuk kamu tinjau.',
-            'time': '3 jam yang lalu',
-            'type': 'success', // Hijau
-          },
-        ]
-      : [
-          {
-            'title': 'Pengajuan Disetujui',
-            'desc': 'Selamat! Pengajuan KP kamu di PT. Telkom telah disetujui.',
-            'time': '2 jam yang lalu',
-            'type': 'success',
-          },
-          {
-            'title': 'Dosen Pembimbing',
-            'desc': 'Dosen Pembimbing kamu telah ditetapkan: Dr. Ir. Iki, M.T.',
-            'time': '5 jam yang lalu',
-            'type': 'info',
-          },
-        ];
-
+    final String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F8F8),
       body: Stack(
         children: [
-          // 🎨 LAYER BACKGROUND: BLOB GRADIENT 🎨
+          // 🎨 LAYER BACKGROUND: BLOB GRADIENT
           _buildBackgroundBlob(300, const Color(0xFF337418), const Alignment(-1.2, -0.8)),
           _buildBackgroundBlob(200, const Color(0xFFFFD700), const Alignment(1.2, 0.5)),
 
@@ -81,14 +49,45 @@ class NotificationPage extends StatelessWidget {
                 ),
               ),
 
-              // ── List Notifikasi ──
+              // ── List Notifikasi (REAL-TIME) ──
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(20),
-                  itemCount: notifications.length,
-                  itemBuilder: (context, index) {
-                    final item = notifications[index];
-                    return _buildNotificationCard(item);
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('notifications')
+                      .where('recipient_id', isEqualTo: currentUserId)
+                      .orderBy('timestamp', descending: true)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(child: Text("Terjadi kesalahan: ${snapshot.error}"));
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator(color: Color(0xFF337418)));
+                    }
+
+                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.notifications_off_outlined, size: 64, color: Colors.grey[300]),
+                            const SizedBox(height: 16),
+                            const Text("Belum ada notifikasi", style: TextStyle(color: Colors.grey)),
+                          ],
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(20),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        var doc = snapshot.data!.docs[index];
+                        var data = doc.data() as Map<String, dynamic>;
+                        return _buildNotificationCard(data, doc.id);
+                      },
+                    );
                   },
                 ),
               ),
@@ -99,31 +98,36 @@ class NotificationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildNotificationCard(Map<String, dynamic> item) {
-    Color typeColor;
-    IconData iconData;
+  Widget _buildNotificationCard(Map<String, dynamic> data, String docId) {
+    // Logika warna berdasarkan isi pesan atau judul
+    Color typeColor = const Color(0xFFFFD700); // Default Gold/Info
+    IconData iconData = Icons.info_rounded;
 
-    switch (item['type']) {
-      case 'success':
-        typeColor = const Color(0xFF337418);
-        iconData = Icons.check_circle_rounded;
-        break;
-      case 'warning':
-        typeColor = const Color(0xFFD32F2F);
-        iconData = Icons.error_rounded;
-        break;
-      default:
-        typeColor = const Color(0xFFFFD700);
-        iconData = Icons.info_rounded;
+    if (data['title'].toString().contains('Setuju')) {
+      typeColor = const Color(0xFF337418);
+      iconData = Icons.check_circle_rounded;
+    } else if (data['title'].toString().contains('Tolak') || data['title'].toString().contains('Revisi')) {
+      typeColor = const Color(0xFFD32F2F);
+      iconData = Icons.error_rounded;
+    }
+
+    // Format Waktu
+    String timeString = "Baru saja";
+    if (data['timestamp'] != null) {
+      DateTime dt = (data['timestamp'] as Timestamp).toDate();
+      timeString = DateFormat('dd MMM, HH:mm').format(dt);
     }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.8), // Glassmorphism
+        color: data['is_read'] == true ? Colors.white.withOpacity(0.6) : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white, width: 1.5),
+        border: Border.all(
+          color: data['is_read'] == true ? Colors.transparent : const Color(0xFF337418).withOpacity(0.1),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -149,17 +153,17 @@ class NotificationPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item['title'],
+                  data['title'] ?? 'Notifikasi',
                   style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF337418)),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  item['desc'],
+                  data['message'] ?? '-',
                   style: const TextStyle(fontSize: 13, color: Colors.black87, height: 1.4),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  item['time'],
+                  timeString,
                   style: const TextStyle(fontSize: 11, color: Colors.black38),
                 ),
               ],

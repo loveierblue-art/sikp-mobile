@@ -4,7 +4,8 @@ import 'login_page.dart';
 import 'detail_pengajuan_page.dart';
 import 'pembimbing_page.dart';
 import 'list_pengajuan_page.dart';
-import 'notification_page.dart'; // Tambahkan import ini
+import 'daftar_bimbingan_page.dart';
+import 'jadwal_temu_page.dart';
 
 class DashboardDosen extends StatefulWidget {
   const DashboardDosen({super.key});
@@ -34,6 +35,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
     }
   }
 
+  // --- WIDGET HELPER UNTUK MEMBUAT BUBBLE GRADIENT (AESTHETIC BLOBS) ---
   Widget _buildBackgroundBlob(double size, Color color, Alignment alignment) {
     return Align(
       alignment: alignment,
@@ -44,7 +46,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
           shape: BoxShape.circle,
           gradient: RadialGradient(
             colors: [
-              color.withOpacity(0.15),
+              color.withOpacity(0.15), // Sangat lembut
               color.withOpacity(0.0),
             ],
           ),
@@ -59,6 +61,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
     final String nama = user?['name'] ?? 'Dosen';
     final String nidn = user?['id_user'] ?? '-';
     final String email = user?['email'] ?? '-';
+
     final int totalPengajuan = _pengajuanList.length;
     final int menunggu =
         _pengajuanList.where((p) => p['status'] == 'Menunggu').length;
@@ -66,21 +69,24 @@ class _DashboardDosenState extends State<DashboardDosen> {
         _pengajuanList.where((p) => p['status'] == 'Disetujui').length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F8F8),
+      backgroundColor: const Color(0xFFF8F8F8), // Latar belakang off-white palet
       body: Stack(
         children: [
-          _buildBackgroundBlob(300, const Color(0xFF337418), const Alignment(-1.1, -1.0)),
-          _buildBackgroundBlob(250, const Color(0xFF5DD62C), const Alignment(1.1, 0.4)),
-          _buildBackgroundBlob(200, const Color(0xFFFFD700), const Alignment(-1.0, 1.1)),
+          // 🎨 LAYER LATAR BELAKANG: LINGKARAN GRADASI LEMBUT (BUBBLE) 🎨
+          _buildBackgroundBlob(300, const Color(0xFF337418), const Alignment(-1.1, -1.0)), // Hijau Tua (Kiri Atas)
+          _buildBackgroundBlob(250, const Color(0xFF5DD62C), const Alignment(1.1, 0.4)),  // Hijau Muda (Kanan Tengah)
+          _buildBackgroundBlob(200, const Color(0xFFFFD700), const Alignment(-1.0, 1.1)),     // Kuning Gold (Kiri Bawah)
 
+          // 📄 LAYER KONTEN: SEMUA KODE ASLI KAMU DI SINI 📄
           SingleChildScrollView(
             child: Column(
               children: [
+                // ── Header (KODE ASLI) ──
                 Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0xFF337418), Color(0xFF1B4D0C)],
+                      colors: [Color(0xFF337418), Color(0xFF1B4D0C)], // Hijau Tua Palet (Atas) ke Hijau Sangat Tua (Bawah)
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -89,12 +95,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
                       bottomRight: Radius.circular(36),
                     ),
                   ),
-                  padding: const EdgeInsets.only(
-                    top: 64,
-                    bottom: 32,
-                    left: 24,
-                    right: 24,
-                  ),
+                  padding: const EdgeInsets.only(top: 64, bottom: 32, left: 24, right: 24),
                   child: Column(
                     children: [
                       Row(
@@ -109,64 +110,17 @@ class _DashboardDosenState extends State<DashboardDosen> {
                               letterSpacing: 1.0,
                             ),
                           ),
-                          // --- Tombol Notifikasi & Logout ---
-                          Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const NotificationPage()),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      width: 38,
-                                      height: 38,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.2),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Icon(
-                                        Icons.notifications_none_rounded,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                    ),
-                                    // Dot Notifikasi Merah
-                                    Positioned(
-                                      right: 2,
-                                      top: 2,
-                                      child: Container(
-                                        width: 10,
-                                        height: 10,
-                                        decoration: BoxDecoration(
-                                          color: Colors.red,
-                                          shape: BoxShape.circle,
-                                          border: Border.all(color: const Color(0xFF337418), width: 1.5),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                          GestureDetector(
+                            onTap: () => _showLogoutDialog(context),
+                            child: Container(
+                              width: 38,
+                              height: 38,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                shape: BoxShape.circle,
                               ),
-                              const SizedBox(width: 12),
-                              GestureDetector(
-                                onTap: () => _showLogoutDialog(context),
-                                child: Container(
-                                  width: 38,
-                                  height: 38,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.logout_rounded,
-                                    color: Colors.white,
-                                    size: 18,
-                                  ),
-                                ),
-                              ),
-                            ],
+                              child: const Icon(Icons.logout_rounded, color: Colors.white, size: 18),
+                            ),
                           ),
                         ],
                       ),
@@ -178,47 +132,33 @@ class _DashboardDosenState extends State<DashboardDosen> {
                           color: Colors.white.withOpacity(0.2),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
-                          Icons.person_rounded,
-                          size: 40,
-                          color: Colors.white,
-                        ),
+                        child: const Icon(Icons.person_rounded, size: 40, color: Colors.white),
                       ),
                       const SizedBox(height: 12),
-                      Text(
-                        nama,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                      Text(nama, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
                       const SizedBox(height: 4),
-                      Text('NIDN: $nidn',
-                          style: const TextStyle(fontSize: 13, color: Colors.white70)),
+                      Text('NIDN: $nidn', style: const TextStyle(fontSize: 13, color: Colors.white70)),
                       const SizedBox(height: 4),
-                      Text(email,
-                          style: const TextStyle(fontSize: 13, color: Colors.white70)),
+                      Text(email, style: const TextStyle(fontSize: 13, color: Colors.white70)),
                       const SizedBox(height: 16),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 6,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFD700).withOpacity(0.3),
+                          color: const Color(0xFFFFD700).withOpacity(0.3), // Kuning Gold Palet (Latar Belakang Badge)
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Text(
                           'Dosen',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Color(0xFFFFD700),
+                            color: Color(0xFFFFD700), // Kuning Gold Palet (Teks Badge)
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
                       const SizedBox(height: 20),
+
+                      // Statistik (KODE ASLI)
                       Row(
                         children: [
                           _buildStatCard('$totalPengajuan', 'Pengajuan\nMasuk'),
@@ -237,13 +177,10 @@ class _DashboardDosenState extends State<DashboardDosen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // ── Menu (DIUBAH SESUAI PERMINTAAN) ──
                       const Text(
                         'Menu',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF337418),
-                        ),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF337418)), // Hijau Tua Palet (Teks)
                       ),
                       const SizedBox(height: 12),
                       GridView.count(
@@ -258,73 +195,80 @@ class _DashboardDosenState extends State<DashboardDosen> {
                             icon: Icons.inbox_rounded,
                             label: 'Pengajuan KP',
                             subtitle: 'Lihat pengajuan masuk',
-                            color: const Color(0xFF337418),
-                            bgColor: const Color(0xFFF0FDF4),
+                            color: const Color(0xFF337418), 
+                            bgColor: const Color(0xFFF0FDF4), 
                             onTap: () => Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => const ListPengajuanPage(),
-                              ),
+                              MaterialPageRoute(builder: (context) => const ListPengajuanPage()),
                             ).then((_) => _loadPengajuan()),
                           ),
                           _buildMenuCard(
                             icon: Icons.supervisor_account_rounded,
                             label: 'Pembimbing',
                             subtitle: 'Tentukan dosen pembimbing',
-                            color: const Color(0xFF5DD62C),
-                            bgColor: const Color(0xFFF0FDF4),
+                            color: const Color(0xFF5DD62C), 
+                            bgColor: const Color(0xFFF0FDF4), 
                             onTap: () => Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => const PembimbingPage(),
-                              ),
+                              MaterialPageRoute(builder: (context) => const PembimbingPage()),
                             ),
+                          ),
+                          _buildMenuCard(
+                            icon: Icons.assignment_ind_rounded,
+                            label: 'Daftar Bimbingan',
+                            subtitle: 'List bimbingan aktif',
+                            color: const Color(0xFFFFD700), 
+                            bgColor: const Color(0xFFFFF8E1), 
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const DaftarBimbinganPage()),
+                              );
+                            },
+                          ),
+                          _buildMenuCard(
+                            icon: Icons.event_available_rounded,
+                            label: 'Jadwal Temu',
+                            subtitle: 'Atur waktu konsultasi',
+                            color: const Color(0xFF202020), 
+                            bgColor: const Color(0xFFF8F8F8), 
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const JadwalTemuPage(),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
                       const SizedBox(height: 28),
+
+                      // ── Pengajuan Terbaru (KODE ASLI) ──
                       const Text(
                         'Pengajuan Terbaru',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF337418),
-                        ),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF337418)), // Hijau Tua Palet (Teks)
                       ),
                       const SizedBox(height: 12),
                       _isLoading
-                          ? const Center(
-                              child: CircularProgressIndicator(
-                                color: Color(0xFF337418),
-                              ),
-                            )
+                          ? const Center(child: CircularProgressIndicator(color: Color(0xFF337418)))
                           : _pengajuanList.isEmpty
                               ? Container(
                                   width: double.infinity,
                                   padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withOpacity(0.8), // Glassmorphism tipis
                                     borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(
-                                      color: const Color(0xFF337418).withOpacity(0.1),
-                                      width: 1,
-                                    ),
+                                    border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1), // Hijau Tua Palet (Border)
                                   ),
                                   child: Column(
                                     children: [
-                                      Icon(
-                                        Icons.inbox_outlined,
-                                        size: 48,
-                                        color: const Color(0xFF337418).withOpacity(0.1),
-                                      ),
+                                      Icon(Icons.inbox_outlined, size: 48, color: const Color(0xFF337418).withOpacity(0.1)),
                                       const SizedBox(height: 12),
                                       const Text(
                                         'Belum ada pengajuan masuk',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xFF337418),
-                                        ),
+                                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF337418)),
                                       ),
                                     ],
                                   ),
@@ -336,20 +280,14 @@ class _DashboardDosenState extends State<DashboardDosen> {
                                       child: GestureDetector(
                                         onTap: () => Navigator.push(
                                           context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                DetailPengajuanPage(pengajuan: pengajuan),
-                                          ),
+                                          MaterialPageRoute(builder: (context) => DetailPengajuanPage(pengajuan: pengajuan)),
                                         ).then((_) => _loadPengajuan()),
                                         child: Container(
                                           padding: const EdgeInsets.all(16),
                                           decoration: BoxDecoration(
-                                            color: Colors.white.withOpacity(0.8),
+                                            color: Colors.white.withOpacity(0.8), // Glassmorphism tipis
                                             borderRadius: BorderRadius.circular(16),
-                                            border: Border.all(
-                                              color: const Color(0xFF337418).withOpacity(0.1),
-                                              width: 1,
-                                            ),
+                                            border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1), // Hijau Tua Palet (Border)
                                           ),
                                           child: Row(
                                             children: [
@@ -357,60 +295,28 @@ class _DashboardDosenState extends State<DashboardDosen> {
                                                 width: 44,
                                                 height: 44,
                                                 decoration: BoxDecoration(
-                                                  color: _getStatusBgColor(
-                                                      pengajuan['status'] ?? ''),
+                                                  color: _getStatusBgColor(pengajuan['status'] ?? ''),
                                                   shape: BoxShape.circle,
                                                 ),
-                                                child: Icon(
-                                                  _getStatusIcon(pengajuan['status'] ?? ''),
-                                                  color: _getStatusColor(
-                                                      pengajuan['status'] ?? ''),
-                                                  size: 22,
-                                                ),
+                                                child: Icon(_getStatusIcon(pengajuan['status'] ?? ''), color: _getStatusColor(pengajuan['status'] ?? ''), size: 22),
                                               ),
                                               const SizedBox(width: 12),
                                               Expanded(
                                                 child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(
-                                                      pengajuan['nama'] ?? '-',
-                                                      style: const TextStyle(
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.w600,
-                                                        color: Color(0xFF337418),
-                                                      ),
-                                                    ),
+                                                    Text(pengajuan['nama'] ?? '-', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF337418))),
                                                     const SizedBox(height: 2),
-                                                    Text(
-                                                      pengajuan['instansi'] ?? '-',
-                                                      style: const TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.black45,
-                                                      ),
-                                                    ),
+                                                    Text(pengajuan['instansi'] ?? '-', style: const TextStyle(fontSize: 12, color: Colors.black45)),
                                                   ],
                                                 ),
                                               ),
                                               Container(
-                                                padding: const EdgeInsets.symmetric(
-                                                  horizontal: 10,
-                                                  vertical: 4,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: _getStatusBgColor(
-                                                      pengajuan['status'] ?? ''),
-                                                  borderRadius: BorderRadius.circular(20),
-                                                ),
+                                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                                decoration: BoxDecoration(color: _getStatusBgColor(pengajuan['status'] ?? ''), borderRadius: BorderRadius.circular(20)),
                                                 child: Text(
                                                   pengajuan['status'] ?? 'Menunggu',
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: _getStatusColor(
-                                                        pengajuan['status'] ?? ''),
-                                                  ),
+                                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: _getStatusColor(pengajuan['status'] ?? '')),
                                                 ),
                                               ),
                                             ],
@@ -421,25 +327,20 @@ class _DashboardDosenState extends State<DashboardDosen> {
                                   }).toList(),
                                 ),
                       const SizedBox(height: 28),
+
+                      // ── Profil (KODE ASLI) ──
                       const Text(
                         'Informasi Profil',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF337418),
-                        ),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF337418)), // Hijau Tua Palet (Teks)
                       ),
                       const SizedBox(height: 12),
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withOpacity(0.8), // Glassmorphism tipis
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFF337418).withOpacity(0.1),
-                            width: 1,
-                          ),
+                          border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1), // Hijau Tua Palet (Border)
                         ),
                         child: Column(
                           children: [
@@ -465,29 +366,30 @@ class _DashboardDosenState extends State<DashboardDosen> {
     );
   }
 
+  // --- WIDGET HELPER ASLI KAMU (TIDAK ADA PERUBAHAN) ---
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'disetujui':
-        return const Color(0xFF337418);
+        return const Color(0xFF337418); // Hijau Tua Palet
       case 'ditolak':
         return const Color(0xFFD32F2F);
       case 'menunggu':
-        return const Color(0xFFFFD700);
+        return const Color(0xFFFFD700); // Kuning Gold Palet
       default:
-        return const Color(0xFF202020);
+        return const Color(0xFF202020); // Abu Gelap Palet
     }
   }
 
   Color _getStatusBgColor(String status) {
     switch (status.toLowerCase()) {
       case 'disetujui':
-        return const Color(0xFFF0FDF4);
+        return const Color(0xFFF0FDF4); // Hijau Sangat Muda Palet
       case 'ditolak':
         return const Color(0xFFFFEBEB);
       case 'menunggu':
         return const Color(0xFFFFF8E1);
       default:
-        return const Color(0xFFF8F8F8);
+        return const Color(0xFFF8F8F8); // Off-White Palet
     }
   }
 
@@ -514,24 +416,9 @@ class _DashboardDosenState extends State<DashboardDosen> {
         ),
         child: Column(
           children: [
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+            Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
             const SizedBox(height: 4),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 11,
-                color: Colors.white70,
-                height: 1.4,
-              ),
-            ),
+            Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 11, color: Colors.white70, height: 1.4)),
           ],
         ),
       ),
@@ -551,12 +438,9 @@ class _DashboardDosenState extends State<DashboardDosen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.8),
+          color: Colors.white.withOpacity(0.8), // Glassmorphism tipis
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: const Color(0xFF337418).withOpacity(0.1),
-            width: 1,
-          ),
+          border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1), // Hijau Tua Palet (Border)
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -573,17 +457,10 @@ class _DashboardDosenState extends State<DashboardDosen> {
             const Spacer(),
             Text(
               label,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF337418),
-              ),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF337418)), // Hijau Tua Palet (Teks)
             ),
             const SizedBox(height: 2),
-            Text(
-              subtitle,
-              style: const TextStyle(fontSize: 11, color: Colors.black45),
-            ),
+            Text(subtitle, style: const TextStyle(fontSize: 11, color: Colors.black45)),
           ],
         ),
       ),
@@ -593,24 +470,16 @@ class _DashboardDosenState extends State<DashboardDosen> {
   Widget _buildProfilRow(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, color: const Color(0xFF337418), size: 20),
+        Icon(icon, color: const Color(0xFF337418), size: 20), // Hijau Tua Palet (Ikon Profil)
         const SizedBox(width: 12),
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 13,
-            color: Colors.black45,
-            fontWeight: FontWeight.w500,
-          ),
+          style: const TextStyle(fontSize: 13, color: Colors.black45, fontWeight: FontWeight.w500),
         ),
         const Spacer(),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 13,
-            color: Color(0xFF337418),
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontSize: 13, color: Color(0xFF337418), fontWeight: FontWeight.w600), // Hijau Tua Palet (Teks Nilai)
         ),
       ],
     );
@@ -630,34 +499,19 @@ class _DashboardDosenState extends State<DashboardDosen> {
               Container(
                 width: 64,
                 height: 64,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFFEBEB),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.logout_rounded,
-                  color: Color(0xFFD32F2F),
-                  size: 32,
-                ),
+                decoration: const BoxDecoration(color: Color(0xFFFFEBEB), shape: BoxShape.circle),
+                child: const Icon(Icons.logout_rounded, color: Color(0xFFD32F2F), size: 32),
               ),
               const SizedBox(height: 16),
               const Text(
                 'Keluar Aplikasi?',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF337418),
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF337418)), // Hijau Tua Palet (Teks)
               ),
               const SizedBox(height: 10),
               const Text(
                 'Anda akan keluar dari akun ini. Yakin ingin melanjutkan?',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black54,
-                  height: 1.5,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.black54, height: 1.5),
               ),
               const SizedBox(height: 24),
               Row(
@@ -668,21 +522,10 @@ class _DashboardDosenState extends State<DashboardDosen> {
                       child: OutlinedButton(
                         onPressed: () => Navigator.pop(context),
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(
-                            color: Color(0xFF337418),
-                            width: 1.5,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                          side: const BorderSide(color: Color(0xFF337418), width: 1.5), // Hijau Tua Palet (Border)
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text(
-                          'Batal',
-                          style: TextStyle(
-                            color: Color(0xFF337418),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        child: const Text('Batal', style: TextStyle(color: Color(0xFF337418), fontWeight: FontWeight.w600)),
                       ),
                     ),
                   ),
@@ -711,17 +554,9 @@ class _DashboardDosenState extends State<DashboardDosen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           ),
-                          child: const Text(
-                            'Keluar',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                          child: const Text('Keluar', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
                         ),
                       ),
                     ),

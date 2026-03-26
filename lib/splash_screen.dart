@@ -32,30 +32,29 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
-    _scaleAnim = Tween<double>(begin: 0.7, end: 1.0).animate(
+    _scaleAnim = Tween<double>(begin: 0.5, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.0, 0.6, curve: Curves.elasticOut),
+        curve: const Interval(0.0, 0.7, curve: Curves.easeOutBack), 
       ),
     );
 
-    _slideAnim = Tween<double>(begin: 30, end: 0).animate(
+    _slideAnim = Tween<double>(begin: 40, end: 0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.3, 0.8, curve: Curves.easeOut),
+        curve: const Interval(0.3, 0.9, curve: Curves.easeOut),
       ),
     );
 
     _controller.forward();
 
-    // Pindah ke LoginPage setelah 3 detik
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
             transitionDuration: const Duration(milliseconds: 800),
-            pageBuilder: (_, __, ___) => LoginPage(),
+            pageBuilder: (_, __, ___) => LoginPage(), 
             transitionsBuilder: (_, animation, __, child) {
               return FadeTransition(opacity: animation, child: child);
             },
@@ -71,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
-  // Helper untuk membuat Bubble Gradient yang estetik
+  // MODIFIKASI: Mengubah perpaduan radial gradient agar tampak seperti efek blur (soft glow)
   Widget _buildBlob(double size, Color color, {double top = 0, double right = 0, double? bottom, double? left}) {
     return Positioned(
       top: top,
@@ -84,7 +83,13 @@ class _SplashScreenState extends State<SplashScreen>
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: RadialGradient(
-            colors: [color.withOpacity(0.2), color.withOpacity(0)],
+            // Menggunakan 3 stop warna agar sebarannya jauh lebih halus seperti blur
+            colors: [
+              color.withOpacity(0.18), // Pusat agak terang
+              color.withOpacity(0.05), // Sebaran tengah
+              color.withOpacity(0.0),  // Menghilang di pinggir
+            ],
+            stops: const [0.0, 0.5, 1.0],
           ),
         ),
       ),
@@ -92,19 +97,19 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Widget _buildWaveLoading() {
-  return AnimatedBuilder(
-    animation: _controller,
-    builder: (context, child) {
-      return Container(
-        width: 160,
-        height: 10,
-        child: CustomPaint(
-          painter: WavePainter(_controller.value),
-        ),
-      );
-    },
-  );
-}
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return SizedBox(
+          width: 160,
+          height: 10,
+          child: CustomPaint(
+            painter: WavePainter(_controller.value),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,124 +118,92 @@ class _SplashScreenState extends State<SplashScreen>
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
+          // MODIFIKASI: Gradient background dibuat lebih rapat transisinya untuk kesan moody/blur
           gradient: LinearGradient(
-            // GANTI: Sekarang menggunakan palet Hijau Tua Khairun
-            colors: [Color(0xFF337418), Color(0xFF1B4D0C)],
+            colors: [Color(0xFF265411), Color(0xFF133608)], 
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
         ),
         child: Stack(
           children: [
-            // ── LAYER BACKGROUND: BLOB GRADIENT ──
-            _buildBlob(300, const Color(0xFF5DD62C), top: -100, right: -50), // Hijau Muda
-            _buildBlob(250, const Color(0xFFFFD700), bottom: -50, left: -50), // Gold
-            _buildBlob(150, Colors.white, top: 200, right: -30),
+            // Blob dibuat lebih besar agar area blurnya luas
+            _buildBlob(500, const Color(0xFF5DD62C), top: -180, right: -120), 
+            _buildBlob(400, const Color(0xFFFFD700), bottom: -150, left: -100), 
+            _buildBlob(300, const Color(0xFF5DD62C), top: 200, left: -150),
 
-            // ── LAYER KONTEN UTAMA ──
             Center(
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context, child) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Logo dengan Background Glass tipis
-                      FadeTransition(
-                        opacity: _fadeAnim,
-                        child: ScaleTransition(
-                          scale: _scaleAnim,
-                          child: Container(
-                            width: 110,
-                            height: 110,
-                            decoration: BoxDecoration(
-                              // GANTI: Warna background glass sekarang Hijau Tua Khairun
-                              color: const Color(0xFF337418).withOpacity(0.5), 
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                // GANTI: Warna border juga Hijau Tua yang lebih tipis
-                                color: const Color(0xFF337418).withOpacity(0.7),
-                                width: 1.5,
-                              ),
-                              // Tambahkan Shadow lembut agar logonya lebih menonjol
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: const Icon(
-                              Icons.school_rounded,
-                              size: 56,
-                              color: Colors.white, // GANTI: Ikon Topi sekarang warna PUTIH bersih
-                            ),
-                          ),
-                        ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FadeTransition(
+                    opacity: _fadeAnim,
+                    child: ScaleTransition(
+                      scale: _scaleAnim,
+                      child: Image.asset(
+                        'assets/images/logo_unkhair.png', 
+                        width: 180, 
+                        height: 180,
+                        fit: BoxFit.contain,
                       ),
-                      const SizedBox(height: 32),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
 
-                      // Nama aplikasi
-                      FadeTransition(
-                        opacity: _fadeAnim,
-                        child: Transform.translate(
-                          offset: Offset(0, _slideAnim.value),
-                          child: const Text(
-                            'SiKP',
-                            style: TextStyle(
-                              fontSize: 48,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              letterSpacing: 6,
-                            ),
-                          ),
+                  FadeTransition(
+                    opacity: _fadeAnim,
+                    child: Transform.translate(
+                      offset: Offset(0, _slideAnim.value),
+                      child: const Text(
+                        'SiKP',
+                        style: TextStyle(
+                          fontSize: 52,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 8,
                         ),
                       ),
-                      
-                      // Subtitle dengan aksen Gold
-                      FadeTransition(
-                        opacity: _fadeAnim,
-                        child: Transform.translate(
-                          offset: Offset(0, _slideAnim.value),
-                          child: const Text(
-                            'Sistem Informasi Kerja Praktek',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFFFFD700), // Teks Gold lembut
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
+                    ),
+                  ),
+                  
+                  FadeTransition(
+                    opacity: _fadeAnim,
+                    child: Transform.translate(
+                      offset: Offset(0, _slideAnim.value),
+                      child: const Text(
+                        'Sistem Informasi Kerja Praktek',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 1.2,
                         ),
                       ),
-                      const SizedBox(height: 100),
+                    ),
+                  ),
+                  const SizedBox(height: 80),
 
-                      // Loading indicator (Ganti ke Gold agar terlihat mewah)
-                      FadeTransition(
-                        opacity: _fadeAnim,
-                        child: Column(
-                          children: [
-                            _buildWaveLoading(), // Panggil fungsi gelombang di sini
-                            const SizedBox(height: 16),
-                            const Text(
-                              'Menghubungkan ke server...',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white60,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                          ],
+                  FadeTransition(
+                    opacity: _fadeAnim,
+                    child: Column(
+                      children: [
+                        _buildWaveLoading(),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Universitas Khairun',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white60,
+                            letterSpacing: 2,
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                },
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
 
-            // Versi aplikasi
             Positioned(
               bottom: 40,
               left: 0,
@@ -238,7 +211,7 @@ class _SplashScreenState extends State<SplashScreen>
               child: FadeTransition(
                 opacity: _fadeAnim,
                 child: const Text(
-                  'Universitas Khairun • v1.0.0',
+                  'Fakultas Teknik • Teknik Informatika',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 11, color: Colors.white30, letterSpacing: 1),
                 ),
@@ -258,31 +231,12 @@ class WavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Colors.white // Warna Putih sesuai request kamu
+      ..color = const Color(0xFFFFD700).withOpacity(0.8)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3.0
+      ..strokeWidth = 2.5
       ..strokeCap = StrokeCap.round;
 
     Path path = Path();
-    path.moveTo(0, size.height / 2);
-
-    for (double i = 0; i <= size.width; i++) {
-      // Logic gelombang: Sinusoida yang bergerak berdasarkan value controller
-      path.lineTo(
-        i,
-        size.height / 2 + (5 * Curves.easeInOut.transform(value) * (i / 20 + value * 10).remainder(2.0 * 3.14).sign * 0.5), 
-        // Note: Kamu bisa sederhanakan ini, tapi intinya dia membuat path meliuk
-      );
-      
-      // Cara yang lebih smooth:
-      double y = size.height / 2 + 4 * (i / 20 + value * 5).remainder(6.28);
-      // Tapi untuk kemudahan, mari pakai sinus sederhana:
-      double dy = 4 * (i / 15 + value * 10);
-      path.lineTo(i, size.height / 2 + (3 * (i % 20 < 10 ? 1 : -1)));
-    }
-    
-    // Versi Sinus murni agar lebih bergelombang cantik:
-    path = Path();
     for (double i = 0; i <= size.width; i++) {
       double y = size.height / 2 + 4 * Math.sin((i / size.width * 2 * 3.14) + (value * 10));
       if (i == 0) path.moveTo(i, y);
@@ -295,6 +249,3 @@ class WavePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
-
-// Tambahkan import math di paling atas file:
-// import 'dart:math' as Math;

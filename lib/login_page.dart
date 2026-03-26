@@ -192,11 +192,11 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       TextButton(
                         onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage())), // SUDAH DIPERBAIKI
-                        child: Text('Daftar Akun', style: TextStyle(color: primaryGreen, fontWeight: FontWeight.bold)),
+                        child: Text('Daftar Akun', style: TextStyle(color: Color(0xFFFFD700), fontWeight: FontWeight.bold)),
                       ),
                       TextButton(
                         onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordPage())), // SUDAH DIPERBAIKI
-                        child: Text('Lupa Password?', style: TextStyle(color: primaryGreen, fontWeight: FontWeight.bold, fontSize: 13)),
+                        child: Text('Lupa Password?', style: TextStyle(color: Color(0xFFFFD700), fontWeight: FontWeight.bold, fontSize: 13)),
                       ),
                     ],
                   ),

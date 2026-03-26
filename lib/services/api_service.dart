@@ -289,4 +289,26 @@ class ApiService {
       return {'success': false, 'message': 'Gagal mengambil data dosen: $e'};
     }
   }
+
+  Future<void> sendNotification({
+    required String toUid,
+    required String title,
+    required String message,
+  }) async {
+    try {
+      await FirebaseFirestore.instance.collection('notifications').add({
+        'recipient_id': toUid,
+        'title': title,
+        'message': message,
+        'timestamp': FieldValue.serverTimestamp(),
+        'is_read': false,
+      });
+      print("✅ Notif Firebase Terkirim!");
+    } catch (e) {
+      print("❌ Gagal kirim notif: $e");
+    }
+  }
 }
+
+
+
