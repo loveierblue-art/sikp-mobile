@@ -43,3 +43,12 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+.gradle/
+build/
+.dart_tool/
+.idea/
+.flutter-plugins
+.flutter-plugins-dependencies
+# File rahasia (jangan di-push!)
+android/local.properties

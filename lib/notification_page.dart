@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart'; // Tambahkan package intl di pubspec.yaml jika belum ada
+import 'package:intl/intl.dart'; 
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
@@ -14,7 +14,7 @@ class NotificationPage extends StatelessWidget {
       backgroundColor: const Color(0xFFF8F8F8),
       body: Stack(
         children: [
-          // 🎨 LAYER BACKGROUND: BLOB GRADIENT
+          //blob background
           _buildBackgroundBlob(300, const Color(0xFF337418), const Alignment(-1.2, -0.8)),
           _buildBackgroundBlob(200, const Color(0xFFFFD700), const Alignment(1.2, 0.5)),
 
@@ -99,8 +99,8 @@ class NotificationPage extends StatelessWidget {
   }
 
   Widget _buildNotificationCard(Map<String, dynamic> data, String docId) {
-    // Logika warna berdasarkan isi pesan atau judul
-    Color typeColor = const Color(0xFFFFD700); // Default Gold/Info
+    //logika warna berdasarkan isi pesan atau judul
+    Color typeColor = const Color(0xFFFFD700);
     IconData iconData = Icons.info_rounded;
 
     if (data['title'].toString().contains('Setuju')) {
@@ -111,7 +111,7 @@ class NotificationPage extends StatelessWidget {
       iconData = Icons.error_rounded;
     }
 
-    // Format Waktu
+    //format Waktu
     String timeString = "Baru saja";
     if (data['timestamp'] != null) {
       DateTime dt = (data['timestamp'] as Timestamp).toDate();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'services/api_service.dart';
-import 'dart:ui'; // Penting untuk efek Blur/Glassmorphism
+import 'dart:ui';
 
 class AjukanKpPage extends StatefulWidget {
   const AjukanKpPage({super.key});
@@ -288,10 +288,10 @@ class _AjukanKpPageState extends State<AjukanKpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F8EE), // Background Hijau Sangat Muda
+      backgroundColor: const Color(0xFFF1F8EE),
       body: Stack(
         children: [
-          // ── Efek Blob (Latar Belakang) ──
+          // ── Efek Blob (latar belakang) ──
           Positioned(
             top: 150, right: -50,
             child: Container(
@@ -316,7 +316,7 @@ class _AjukanKpPageState extends State<AjukanKpPage> {
           SingleChildScrollView(
             child: Column(
               children: [
-                // ── Header (Gradient Hijau) ──
+                // ── Header ──
                 Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
@@ -354,7 +354,7 @@ class _AjukanKpPageState extends State<AjukanKpPage> {
                   ),
                 ),
 
-                // ── Form dengan Glassmorphism ──
+                // ── Form ──
                 Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: ClipRRect(

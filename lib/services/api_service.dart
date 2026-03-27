@@ -11,7 +11,7 @@ class ApiService {
   // ==================================================
   Future<Map<String, dynamic>> login(String identifier, String password) async {
     try {
-      // Cari user di Firestore berdasarkan id_user
+      //Cari user di Firestore berdasarkan id_user
       final query =
           await _firestore
               .collection('users')
@@ -28,7 +28,7 @@ class ApiService {
       final userData = query.docs.first.data();
       final String email = userData['email'];
 
-      // Login dengan Firebase Auth
+      //login dengan Firebase Auth
       await _auth.signInWithEmailAndPassword(email: email, password: password);
 
       currentUser = userData;
@@ -66,7 +66,7 @@ class ApiService {
     String password,
   ) async {
     try {
-      // Cek apakah id_user sudah terdaftar
+      //cek apakah id_user sudah terdaftar
       final query =
           await _firestore
               .collection('users')
@@ -77,7 +77,7 @@ class ApiService {
         return {'success': false, 'message': 'NPM sudah terdaftar.'};
       }
 
-      // Cek apakah email sudah dipakai
+      //cek apakah email sudah dipakai
       final emailQuery =
           await _firestore
               .collection('users')
@@ -88,17 +88,15 @@ class ApiService {
         return {'success': false, 'message': 'Email sudah digunakan.'};
       }
 
-      // Buat akun di Firebase Auth
+      //buat akun di Firebase Auth
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // Role selalu mahasiswa saat register
-      // Akun dosen didaftarkan oleh admin langsung di Firebase Console
       const String role = 'mahasiswa';
 
-      // Simpan data user ke Firestore
+      //simpan data user ke Firestore
       await _firestore.collection('users').doc(credential.user!.uid).set({
         'id_user': id,
         'name': name,
@@ -130,8 +128,6 @@ class ApiService {
   // ==================================================
   Future<Map<String, dynamic>> sendResetPasswordEmail(String email) async {
   try {
-
-      // Kirim email reset password
       await _auth.sendPasswordResetEmail(email: email);
       return {
         'success': true,
@@ -309,6 +305,3 @@ class ApiService {
     }
   }
 }
-
-
-

@@ -15,45 +15,45 @@ class DashboardDosen extends StatefulWidget {
 }
 
 class _DashboardDosenState extends State<DashboardDosen> {
-  List<Map<String, dynamic>> _pengajuanList = [];
-  bool _isLoading = true;
-  final ApiService _apiService = ApiService();
+  List<Map<String, dynamic>> _pengajuanList = [];  //simpan data list pengajuan dari database
+  bool _isLoading = true;  //status buat nampilin loading spinner
+  final ApiService _apiService = ApiService();  //panggil koneksi ke API
 
   @override
   void initState() {
-    super.initState();
-    _loadPengajuan();
-  }
-
-  void _loadPengajuan() async {
-    final result = await _apiService.getAllPengajuanKP();
-    if (mounted) {
-      setState(() {
-        _pengajuanList = List<Map<String, dynamic>>.from(result['data'] ?? []);
-        _isLoading = false;
-      });
+      super.initState();
+      _loadPengajuan();  //jalankan fungsi ambil data pas halaman pertama dibuka
     }
-  }
 
-  // --- WIDGET HELPER UNTUK MEMBUAT BUBBLE GRADIENT (AESTHETIC BLOBS) ---
-  Widget _buildBackgroundBlob(double size, Color color, Alignment alignment) {
-    return Align(
-      alignment: alignment,
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: RadialGradient(
-            colors: [
-              color.withOpacity(0.15), // Sangat lembut
-              color.withOpacity(0.0),
-            ],
+    void _loadPengajuan() async {
+      final result = await _apiService.getAllPengajuanKP();  //ambil data pengajuan dari server
+      if (mounted) {
+        setState(() {
+          _pengajuanList = List<Map<String, dynamic>>.from(result['data'] ?? []); //masukin data ke list
+          _isLoading = false;  //matikan loading kalau data udah dapet
+        });
+      }
+    }
+
+  // --- WIDGET HELPER UNTUK BUAT BUBBLE GRADIENT ---
+    Widget _buildBackgroundBlob(double size, Color color, Alignment alignment) {
+      return Align(
+        alignment: alignment,
+        child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: RadialGradient(
+              colors: [
+                color.withOpacity(0.15), 
+                color.withOpacity(0.0),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +62,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
     final String nidn = user?['id_user'] ?? '-';
     final String email = user?['email'] ?? '-';
 
+    //logika hitung statistik dashboard
     final int totalPengajuan = _pengajuanList.length;
     final int menunggu =
         _pengajuanList.where((p) => p['status'] == 'Menunggu').length;
@@ -69,24 +70,24 @@ class _DashboardDosenState extends State<DashboardDosen> {
         _pengajuanList.where((p) => p['status'] == 'Disetujui').length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F8F8), // Latar belakang off-white palet
+      backgroundColor: const Color(0xFFF8F8F8), //latar belakang off-white palet
       body: Stack(
         children: [
-          // 🎨 LAYER LATAR BELAKANG: LINGKARAN GRADASI LEMBUT (BUBBLE) 🎨
-          _buildBackgroundBlob(300, const Color(0xFF337418), const Alignment(-1.1, -1.0)), // Hijau Tua (Kiri Atas)
-          _buildBackgroundBlob(250, const Color(0xFF5DD62C), const Alignment(1.1, 0.4)),  // Hijau Muda (Kanan Tengah)
-          _buildBackgroundBlob(200, const Color(0xFFFFD700), const Alignment(-1.0, 1.1)),     // Kuning Gold (Kiri Bawah)
+          //efek bulatan transparan di background
+          _buildBackgroundBlob(300, const Color(0xFF337418), const Alignment(-1.1, -1.0)), 
+          _buildBackgroundBlob(250, const Color(0xFF5DD62C), const Alignment(1.1, 0.4)),
+          _buildBackgroundBlob(200, const Color(0xFFFFD700), const Alignment(-1.0, 1.1)), 
 
-          // 📄 LAYER KONTEN: SEMUA KODE ASLI KAMU DI SINI 📄
+          //layer konten
           SingleChildScrollView(
             child: Column(
               children: [
-                // ── Header (KODE ASLI) ──
+                // ── Header ──
                 Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0xFF337418), Color(0xFF1B4D0C)], // Hijau Tua Palet (Atas) ke Hijau Sangat Tua (Bawah)
+                      colors: [Color(0xFF337418), Color(0xFF1B4D0C)], (Atas) ke Hijau Sangat Tua (Bawah)
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -125,6 +126,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
                         ],
                       ),
                       const SizedBox(height: 24),
+                      //foto Profil Placeholder
                       Container(
                         width: 72,
                         height: 72,
@@ -144,21 +146,21 @@ class _DashboardDosenState extends State<DashboardDosen> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFD700).withOpacity(0.3), // Kuning Gold Palet (Latar Belakang Badge)
+                          color: const Color(0xFFFFD700).withOpacity(0.3), 
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Text(
                           'Dosen',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Color(0xFFFFD700), // Kuning Gold Palet (Teks Badge)
+                            color: Color(0xFFFFD700), 
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
                       const SizedBox(height: 20),
 
-                      // Statistik (KODE ASLI)
+                      //baris statistik
                       Row(
                         children: [
                           _buildStatCard('$totalPengajuan', 'Pengajuan\nMasuk'),
@@ -177,10 +179,10 @@ class _DashboardDosenState extends State<DashboardDosen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ── Menu (DIUBAH SESUAI PERMINTAAN) ──
+                      // ── Menu ──
                       const Text(
                         'Menu',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF337418)), // Hijau Tua Palet (Teks)
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF337418)), 
                       ),
                       const SizedBox(height: 12),
                       GridView.count(
@@ -245,10 +247,10 @@ class _DashboardDosenState extends State<DashboardDosen> {
                       ),
                       const SizedBox(height: 28),
 
-                      // ── Pengajuan Terbaru (KODE ASLI) ──
+                      // ── list Pengajuan Terbaru ──
                       const Text(
                         'Pengajuan Terbaru',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF337418)), // Hijau Tua Palet (Teks)
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF337418)), 
                       ),
                       const SizedBox(height: 12),
                       _isLoading
@@ -258,9 +260,9 @@ class _DashboardDosenState extends State<DashboardDosen> {
                                   width: double.infinity,
                                   padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.8), // Glassmorphism tipis
+                                    color: Colors.white.withOpacity(0.8), 
                                     borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1), // Hijau Tua Palet (Border)
+                                    border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1),
                                   ),
                                   child: Column(
                                     children: [
@@ -285,9 +287,9 @@ class _DashboardDosenState extends State<DashboardDosen> {
                                         child: Container(
                                           padding: const EdgeInsets.all(16),
                                           decoration: BoxDecoration(
-                                            color: Colors.white.withOpacity(0.8), // Glassmorphism tipis
+                                            color: Colors.white.withOpacity(0.8), 
                                             borderRadius: BorderRadius.circular(16),
-                                            border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1), // Hijau Tua Palet (Border)
+                                            border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1), 
                                           ),
                                           child: Row(
                                             children: [
@@ -328,19 +330,19 @@ class _DashboardDosenState extends State<DashboardDosen> {
                                 ),
                       const SizedBox(height: 28),
 
-                      // ── Profil (KODE ASLI) ──
+                      // ── Profil ──
                       const Text(
                         'Informasi Profil',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF337418)), // Hijau Tua Palet (Teks)
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF337418)), 
                       ),
                       const SizedBox(height: 12),
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.8), // Glassmorphism tipis
+                          color: Colors.white.withOpacity(0.8), 
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1), // Hijau Tua Palet (Border)
+                          border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1),
                         ),
                         child: Column(
                           children: [
@@ -366,33 +368,34 @@ class _DashboardDosenState extends State<DashboardDosen> {
     );
   }
 
-  // --- WIDGET HELPER ASLI KAMU (TIDAK ADA PERUBAHAN) ---
+  // --- WIDGET HELPER ---
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'disetujui':
-        return const Color(0xFF337418); // Hijau Tua Palet
+        return const Color(0xFF337418); 
       case 'ditolak':
         return const Color(0xFFD32F2F);
       case 'menunggu':
-        return const Color(0xFFFFD700); // Kuning Gold Palet
+        return const Color(0xFFFFD700); 
       default:
-        return const Color(0xFF202020); // Abu Gelap Palet
+        return const Color(0xFF202020); 
     }
   }
 
   Color _getStatusBgColor(String status) {
     switch (status.toLowerCase()) {
       case 'disetujui':
-        return const Color(0xFFF0FDF4); // Hijau Sangat Muda Palet
+        return const Color(0xFFF0FDF4); 
       case 'ditolak':
         return const Color(0xFFFFEBEB);
       case 'menunggu':
         return const Color(0xFFFFF8E1);
       default:
-        return const Color(0xFFF8F8F8); // Off-White Palet
+        return const Color(0xFFF8F8F8); 
     }
   }
 
+  //logika pewarnaan status
   IconData _getStatusIcon(String status) {
     switch (status.toLowerCase()) {
       case 'disetujui':
@@ -405,7 +408,8 @@ class _DashboardDosenState extends State<DashboardDosen> {
         return Icons.assignment_outlined;
     }
   }
-
+  
+  //widget kartu statistik
   Widget _buildStatCard(String value, String label) {
     return Expanded(
       child: Container(
@@ -425,6 +429,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
     );
   }
 
+  //widget kartu menu
   Widget _buildMenuCard({
     required IconData icon,
     required String label,
@@ -438,9 +443,9 @@ class _DashboardDosenState extends State<DashboardDosen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.8), // Glassmorphism tipis
+          color: Colors.white.withOpacity(0.8), 
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1), // Hijau Tua Palet (Border)
+          border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1), 
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -457,7 +462,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
             const Spacer(),
             Text(
               label,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF337418)), // Hijau Tua Palet (Teks)
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF337418)), 
             ),
             const SizedBox(height: 2),
             Text(subtitle, style: const TextStyle(fontSize: 11, color: Colors.black45)),
@@ -467,10 +472,11 @@ class _DashboardDosenState extends State<DashboardDosen> {
     );
   }
 
+  //widget baris informasi profil
   Widget _buildProfilRow(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, color: const Color(0xFF337418), size: 20), // Hijau Tua Palet (Ikon Profil)
+        Icon(icon, color: const Color(0xFF337418), size: 20), 
         const SizedBox(width: 12),
         Text(
           label,
@@ -479,12 +485,13 @@ class _DashboardDosenState extends State<DashboardDosen> {
         const Spacer(),
         Text(
           value,
-          style: const TextStyle(fontSize: 13, color: Color(0xFF337418), fontWeight: FontWeight.w600), // Hijau Tua Palet (Teks Nilai)
+          style: const TextStyle(fontSize: 13, color: Color(0xFF337418), fontWeight: FontWeight.w600), 
         ),
       ],
     );
   }
 
+  //dialog konfirmasi logout
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -505,7 +512,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
               const SizedBox(height: 16),
               const Text(
                 'Keluar Aplikasi?',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF337418)), // Hijau Tua Palet (Teks)
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF337418)), 
               ),
               const SizedBox(height: 10),
               const Text(
@@ -522,7 +529,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
                       child: OutlinedButton(
                         onPressed: () => Navigator.pop(context),
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0xFF337418), width: 1.5), // Hijau Tua Palet (Border)
+                          side: const BorderSide(color: Color(0xFF337418), width: 1.5), 
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         child: const Text('Batal', style: TextStyle(color: Color(0xFF337418), fontWeight: FontWeight.w600)),

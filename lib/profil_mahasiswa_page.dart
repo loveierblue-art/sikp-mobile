@@ -45,10 +45,10 @@ class _ProfilMahasiswaPageState extends State<ProfilMahasiswaPage> {
     final String dosenPembimbing = _pengajuanKP?['dosenPembimbing'] ?? '-';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF8), // Mengikuti tema dashboard hijau
+      backgroundColor: const Color(0xFFF8FAF8),
       body: Stack(
         children: [
-          // ── Efek Blob (Tumpukan lingkaran gradasi di belakang) ──
+          //blob gradient
           Positioned(
             top: -50,
             right: -50,
@@ -88,7 +88,7 @@ class _ProfilMahasiswaPageState extends State<ProfilMahasiswaPage> {
           SingleChildScrollView(
             child: Column(
               children: [
-                // Header (Ganti ke Gradasi Hijau Tua)
+                // Header
                 Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
@@ -153,18 +153,18 @@ class _ProfilMahasiswaPageState extends State<ProfilMahasiswaPage> {
                         style: const TextStyle(fontSize: 13, color: Colors.white70),
                       ),
                       const SizedBox(height: 12),
-                      // Badge "Mahasiswa" (Sekarang Kuning Gold)
+                      // Badge "Mahasiswa" 
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFD700).withOpacity(0.9), // Kuning Gold
+                          color: const Color(0xFFFFD700).withOpacity(0.9), 
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          status, // Menampilkan status tapi dengan tema warna gold
+                          status, //menampilkan status tapi dengan tema warna gold
                           style: const TextStyle(
                             fontSize: 12,
-                            color: Color(0xFF337418), // Teks hijau tua di atas gold
+                            color: Color(0xFF337418),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -187,7 +187,7 @@ class _ProfilMahasiswaPageState extends State<ProfilMahasiswaPage> {
                             _buildSectionTitle(
                               'Status Kerja Praktek',
                               Icons.work_outline_rounded,
-                              const Color(0xFF337418), // Warna Hijau Tua
+                              const Color(0xFF337418), 
                             ),
                             const SizedBox(height: 12),
                             Container(
@@ -222,14 +222,14 @@ class _ProfilMahasiswaPageState extends State<ProfilMahasiswaPage> {
                             _buildSectionTitle(
                               'Data Diri',
                               Icons.person_outline_rounded,
-                              const Color(0xFF337418), // Warna Hijau Tua
+                              const Color(0xFF337418), 
                             ),
                             const SizedBox(height: 12),
                             Container(
                               width: double.infinity,
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.8), // Glassmorphism
+                                color: Colors.white.withOpacity(0.8), 
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
                                   color: const Color(0xFF337418).withOpacity(0.1),
@@ -254,14 +254,14 @@ class _ProfilMahasiswaPageState extends State<ProfilMahasiswaPage> {
                             _buildSectionTitle(
                               'Data Partner KP',
                               Icons.people_rounded,
-                              const Color(0xFF337418), // Warna Hijau Tua
+                              const Color(0xFF337418),
                             ),
                             const SizedBox(height: 12),
                             Container(
                               width: double.infinity,
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.8), // Glassmorphism
+                                color: Colors.white.withOpacity(0.8), 
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
                                   color: const Color(0xFF337418).withOpacity(0.1),
@@ -336,7 +336,7 @@ class _ProfilMahasiswaPageState extends State<ProfilMahasiswaPage> {
           style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF1B5E20), // Hijau gelap mengikuti tema
+            color: Color(0xFF1B5E20), 
           ),
         ),
       ],
@@ -346,7 +346,7 @@ class _ProfilMahasiswaPageState extends State<ProfilMahasiswaPage> {
   Widget _buildInfoRow(IconData icon, String label, String value, {Color? valueColor}) {
     return Row(
       children: [
-        Icon(icon, color: const Color(0xFFFFD700), size: 20), // Ikon menu ke Kuning Gold
+        Icon(icon, color: const Color(0xFFFFD700), size: 20),
         const SizedBox(width: 12),
         Text(
           label,
@@ -374,7 +374,7 @@ class _ProfilMahasiswaPageState extends State<ProfilMahasiswaPage> {
       case 'menunggu':
         return const Color(0xFFF9A825);
       default:
-        return const Color(0xFF337418); // Default ke hijau tua
+        return const Color(0xFF337418); 
     }
   }
 }

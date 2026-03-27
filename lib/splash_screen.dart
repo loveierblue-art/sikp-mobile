@@ -70,7 +70,6 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
-  // MODIFIKASI: Mengubah perpaduan radial gradient agar tampak seperti efek blur (soft glow)
   Widget _buildBlob(double size, Color color, {double top = 0, double right = 0, double? bottom, double? left}) {
     return Positioned(
       top: top,
@@ -83,11 +82,10 @@ class _SplashScreenState extends State<SplashScreen>
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: RadialGradient(
-            // Menggunakan 3 stop warna agar sebarannya jauh lebih halus seperti blur
             colors: [
-              color.withOpacity(0.18), // Pusat agak terang
-              color.withOpacity(0.05), // Sebaran tengah
-              color.withOpacity(0.0),  // Menghilang di pinggir
+              color.withOpacity(0.18), //tengah agak terang
+              color.withOpacity(0.05), //sebaran tengah
+              color.withOpacity(0.0),  //menghilang di pinggir
             ],
             stops: const [0.0, 0.5, 1.0],
           ),
@@ -118,7 +116,6 @@ class _SplashScreenState extends State<SplashScreen>
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          // MODIFIKASI: Gradient background dibuat lebih rapat transisinya untuk kesan moody/blur
           gradient: LinearGradient(
             colors: [Color(0xFF265411), Color(0xFF133608)], 
             begin: Alignment.topLeft,
@@ -127,7 +124,7 @@ class _SplashScreenState extends State<SplashScreen>
         ),
         child: Stack(
           children: [
-            // Blob dibuat lebih besar agar area blurnya luas
+            //blob
             _buildBlob(500, const Color(0xFF5DD62C), top: -180, right: -120), 
             _buildBlob(400, const Color(0xFFFFD700), bottom: -150, left: -100), 
             _buildBlob(300, const Color(0xFF5DD62C), top: 200, left: -150),

@@ -14,7 +14,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   bool _isLoading = false;
   bool _isPressed = false;
 
-  // --- PALET WARNA BARU ---
   final Color primaryGreen = const Color(0xFF337418);
   final Color backgroundWhite = const Color(0xFFF8F8F8);
   final Color darkText = const Color(0xFF202020);
@@ -125,11 +124,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Latar belakang putih bersih
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header Clean Gradient
+            // Header
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -200,7 +199,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                   const SizedBox(height: 32),
                   
-                  // Tombol Update Password Hijau
+                  //tombol update password
                   GestureDetector(
                     onTap: () { if (!_isLoading) _handleReset(); },
                     child: Container(

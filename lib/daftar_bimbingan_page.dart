@@ -9,14 +9,14 @@ class DaftarBimbinganPage extends StatefulWidget {
 }
 
 class _DaftarBimbinganPageState extends State<DaftarBimbinganPage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance; //jembatan ke db cloud firestore
   bool _isLoading = false;
 
-  // Fungsi untuk menampilkan Detail Pengajuan Lengkap
+  //fungsi untuk nampilin detail pengajuan lengkap
   void _showDetailPengajuan(BuildContext context, Map<String, dynamic> data) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true,
+      isScrollControlled: true, //biar tingginya bisa kita atur sendiri
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
         height: MediaQuery.of(context).size.height * 0.7,
@@ -107,9 +107,8 @@ class _DaftarBimbinganPageState extends State<DaftarBimbinganPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F8F1),
-      body: Stack(
+      body: Stack( //pakai Stack biar hiasan lingkaran bisa numpuk di belakang
         children: [
-          // Background Blobs (Tetap Ada)
           Positioned(
             top: -50,
             right: -50,
@@ -141,7 +140,7 @@ class _DaftarBimbinganPageState extends State<DaftarBimbinganPage> {
 
           Column(
             children: [
-              // ── Header (Tetap Ada) ──
+              // ── Header ──
               Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
@@ -218,7 +217,7 @@ class _DaftarBimbinganPageState extends State<DaftarBimbinganPage> {
               Expanded(
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator(color: Color(0xFF337418)))
-                    : StreamBuilder<QuerySnapshot>(
+                    : StreamBuilder<QuerySnapshot>(  //data berubah di Firestore, aplikasi otomatis update
                         stream: _firestore
                             .collection('pengajuan_kp')
                             .where('status', isEqualTo: 'Disetujui')

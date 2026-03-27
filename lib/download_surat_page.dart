@@ -47,7 +47,7 @@ class _DownloadSuratPageState extends State<DownloadSuratPage> {
     final String dosenPembimbing = _pengajuanKP?['dosenPembimbing'] ?? '-';
     final String status = _pengajuanKP?['status'] ?? 'Belum Diajukan';
 
-    // Tanggal hari ini untuk kop surat
+    // tanggal hari ini untuk kop surat
     final now = DateTime.now();
     final List<String> bulan = [
       '',
@@ -66,7 +66,7 @@ class _DownloadSuratPageState extends State<DownloadSuratPage> {
     ];
     final String tanggal = '${now.day} ${bulan[now.month]} ${now.year}';
 
-    // Tanggal dari Firebase
+    // tanggal dari Firebase
     final String tanggalMulai = _pengajuanKP?['tanggalMulai'] ?? '-';
     final String tanggalSelesai = _pengajuanKP?['tanggalSelesai'] ?? '-';
 
@@ -164,10 +164,10 @@ class _DownloadSuratPageState extends State<DownloadSuratPage> {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF8), // Background mengikuti tema hijau
+      backgroundColor: const Color(0xFFF8FAF8),
       body: Stack(
         children: [
-          // ── Efek Blob (Tambah tumpukan lingkaran gradasi) ──
+          // ── Efek Blob ──
           Positioned(
             top: -40,
             right: -40,
@@ -197,16 +197,15 @@ class _DownloadSuratPageState extends State<DownloadSuratPage> {
             ),
           ),
 
-          // ── Konten Asli ──
           SingleChildScrollView(
             child: Column(
               children: [
-                // Header (Biru diganti ke Gradasi Hijau Tua)
+                // Header
                 Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0xFF337418), Color(0xFF458C26)], // Gradasi Hijau
+                      colors: [Color(0xFF337418), Color(0xFF458C26)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -293,7 +292,7 @@ class _DownloadSuratPageState extends State<DownloadSuratPage> {
 
                             const Text(
                               'Surat Tersedia',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF337418)), // Warna Hijau
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF337418)),
                             ),
                             const SizedBox(height: 12),
                             ...daftarSurat.map(
@@ -306,7 +305,7 @@ class _DownloadSuratPageState extends State<DownloadSuratPage> {
                                     child: Container(
                                       padding: const EdgeInsets.all(20),
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.8), // Glassmorphism Opacity 0.8
+                                        color: Colors.white.withOpacity(0.8), 
                                         borderRadius: BorderRadius.circular(16),
                                         border: Border.all(color: const Color(0xFF337418).withOpacity(0.1), width: 1),
                                       ),
@@ -348,7 +347,7 @@ class _DownloadSuratPageState extends State<DownloadSuratPage> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            // Catatan (Tetap Gold sesuai dashboard)
+                            // Catatan
                             Container(
                               width: double.infinity,
                               padding: const EdgeInsets.all(16),

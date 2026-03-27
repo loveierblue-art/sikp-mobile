@@ -5,7 +5,7 @@ import 'dashboard_dosen.dart';
 import 'register_page.dart';
 import 'forgot_password.dart';
 
-// --- CLIPPER OMBAK PERSIS REFERENSI ---
+// --- CLIPPER OMBAK ---
 class WaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
@@ -191,11 +191,11 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage())), // SUDAH DIPERBAIKI
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage())),
                         child: Text('Daftar Akun', style: TextStyle(color: Color(0xFFFFD700), fontWeight: FontWeight.bold)),
                       ),
                       TextButton(
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordPage())), // SUDAH DIPERBAIKI
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordPage())), 
                         child: Text('Lupa Password?', style: TextStyle(color: Color(0xFFFFD700), fontWeight: FontWeight.bold, fontSize: 13)),
                       ),
                     ],

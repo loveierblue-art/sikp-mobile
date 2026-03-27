@@ -44,7 +44,7 @@ class _DetailPengajuanPageState extends State<DetailPengajuanPage> {
     _showKonfirmasiTolak();
   }
 
-  // ====================== DIALOG SETUJU ======================
+  // === DIALOG SETUJU ===
   void _showKonfirmasiSetujui() {
     showDialog(
       context: context,
@@ -122,7 +122,7 @@ class _DetailPengajuanPageState extends State<DetailPengajuanPage> {
     );
   }
 
-  // ====================== DIALOG TOLAK ======================
+  // === DIALOG TOLAK ===
   void _showKonfirmasiTolak() {
     showDialog(
       context: context,
@@ -196,9 +196,6 @@ class _DetailPengajuanPageState extends State<DetailPengajuanPage> {
     );
   }
 
-  // [Fungsi _showSuksesDialog, _showErrorDialog, _buildInfoRow, _buildSectionTitle tetap sama seperti sebelumnya...]
-  // (Potong di sini untuk efisiensi pesan, pastikan widget build kamu menggunakan _handleSetujui & _handleTolak)
-
   void _showSuksesDialog(String pesan) {
     showDialog(
       context: context,
@@ -220,7 +217,8 @@ class _DetailPengajuanPageState extends State<DetailPengajuanPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () { Navigator.pop(context); Navigator.pop(context); },
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF337418), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF337418), 
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: const Text('Kembali', style: TextStyle(color: Colors.white)),
                 ),
               ),
@@ -305,9 +303,11 @@ class _DetailPengajuanPageState extends State<DetailPengajuanPage> {
                 
                 Row(
                   children: [
-                    Expanded(child: ElevatedButton(onPressed: _handleTolak, style: ElevatedButton.styleFrom(backgroundColor: Colors.red), child: const Text('Tolak', style: TextStyle(color: Colors.white)))),
+                    Expanded(child: ElevatedButton(onPressed: _handleTolak, style: ElevatedButton.styleFrom(backgroundColor: Colors.red), 
+                    child: const Text('Tolak', style: TextStyle(color: Colors.white)))),
                     const SizedBox(width: 16),
-                    Expanded(child: ElevatedButton(onPressed: _handleSetujui, style: ElevatedButton.styleFrom(backgroundColor: Colors.green), child: const Text('Setujui', style: TextStyle(color: Colors.white)))),
+                    Expanded(child: ElevatedButton(onPressed: _handleSetujui, style: ElevatedButton.styleFrom(backgroundColor: Colors.green), 
+                    child: const Text('Setujui', style: TextStyle(color: Colors.white)))),
                   ],
                 )
               ],

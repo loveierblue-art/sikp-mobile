@@ -12,10 +12,10 @@ class LihatJadwalPage extends StatelessWidget {
     final String npmMahasiswa = user?['id_user'] ?? '';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F8EE), // Background Hijau Sangat Muda
+      backgroundColor: const Color(0xFFF1F8EE), 
       body: Stack(
         children: [
-          // ── Efek Blob (Latar Belakang) ──
+          // ── Efek Blob ──
           Positioned(
             top: 150, right: -50,
             child: Container(
@@ -39,7 +39,7 @@ class LihatJadwalPage extends StatelessWidget {
 
           Column(
             children: [
-              // ── Header (Gradient Hijau) ──
+              // ── Header ──
               Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
@@ -77,7 +77,7 @@ class LihatJadwalPage extends StatelessWidget {
                 ),
               ),
 
-              // ── List Jadwal dengan Glassmorphism ──
+              // ── List Jadwal ──
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance

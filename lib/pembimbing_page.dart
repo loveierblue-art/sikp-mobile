@@ -24,7 +24,7 @@ class _PembimbingPageState extends State<PembimbingPage> {
     super.dispose();
   }
 
-  // ================== BOTTOM SHEET DIALOG (Sudah Fixed) ==================
+  // === BOTTOM SHEET DIALOG ===
   void _showTambahDialog({Map<String, dynamic>? existing, String? docId}) {
     if (existing != null) {
       _namaController.text = existing['name'] ?? '';
@@ -194,7 +194,7 @@ class _PembimbingPageState extends State<PembimbingPage> {
     );
   }
 
-  // ================== HAPUS DIALOG (Sudah disesuaikan warna) ==================
+  // === HAPUS DIALOG ===
   void _showHapusDialog(String docId, String nama) {
     showDialog(
       context: context,
@@ -274,7 +274,7 @@ class _PembimbingPageState extends State<PembimbingPage> {
     );
   }
 
-  // ================== FIELD DIALOG (Warna hijau tua) ==================
+  // === FIELD DIALOG  ===
   Widget _buildDialogField(
     TextEditingController controller,
     String label,
@@ -324,14 +324,14 @@ class _PembimbingPageState extends State<PembimbingPage> {
     );
   }
 
-  // ================== BUILD UTAMA (Tema Hijau Tua + Blob) ==================
+  // === BUILD UTAMA ===
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F8F1),
       body: Stack(
         children: [
-          // Blob Gradient Background
+          //blob gradient
           Positioned(
             top: -50,
             right: -50,
@@ -436,7 +436,7 @@ class _PembimbingPageState extends State<PembimbingPage> {
                 ),
               ),
 
-              // List Dosen - Glassmorphism
+              // List Dosen
               Expanded(
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator(color: Color(0xFF337418)))
@@ -482,7 +482,7 @@ class _PembimbingPageState extends State<PembimbingPage> {
                                 margin: const EdgeInsets.only(bottom: 12),
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.85), // Glassmorphism
+                                  color: Colors.white.withOpacity(0.85), 
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(color: const Color(0xFF337418).withOpacity(0.15), width: 1),
                                 ),
@@ -515,7 +515,7 @@ class _PembimbingPageState extends State<PembimbingPage> {
                                             width: 34,
                                             height: 34,
                                             decoration: BoxDecoration(color: const Color(0xFFE8F5E9), borderRadius: BorderRadius.circular(8)),
-                                            child: const Icon(Icons.edit_rounded, color: Color(0xFFFFD700), size: 18), // Kuning Gold
+                                            child: const Icon(Icons.edit_rounded, color: Color(0xFFFFD700), size: 18), 
                                           ),
                                         ),
                                         const SizedBox(height: 6),

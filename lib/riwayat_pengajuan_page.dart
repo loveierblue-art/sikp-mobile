@@ -47,10 +47,10 @@ class _RiwayatPengajuanPageState extends State<RiwayatPengajuanPage> {
     final bool ditolak = status.toLowerCase() == 'ditolak';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF8), // Mengikuti tema hijau soft
+      backgroundColor: const Color(0xFFF8FAF8), 
       body: Stack(
         children: [
-          // ── 1. Efek Blob (Lingkaran Gradasi) ──
+          //blob background
           Positioned(
             top: -50,
             right: -50,
@@ -86,11 +86,11 @@ class _RiwayatPengajuanPageState extends State<RiwayatPengajuanPage> {
             ),
           ),
 
-          // ── 2. Konten Utama ──
+          // ── Konten Utama ──
           SingleChildScrollView(
             child: Column(
               children: [
-                // ── Header (Tema Hijau Tua) ──
+                // ── Header ──
                 Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
@@ -194,7 +194,7 @@ class _RiwayatPengajuanPageState extends State<RiwayatPengajuanPage> {
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(24),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.8), // Glassmorphism
+                                  color: Colors.white.withOpacity(0.8), 
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(color: const Color(0xFF337418).withOpacity(0.1)),
                                 ),
@@ -249,7 +249,7 @@ class _RiwayatPengajuanPageState extends State<RiwayatPengajuanPage> {
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(20),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.8), // Glassmorphism
+                                  color: Colors.white.withOpacity(0.8), 
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(color: const Color(0xFF337418).withOpacity(0.1)),
                                 ),
@@ -283,7 +283,7 @@ class _RiwayatPengajuanPageState extends State<RiwayatPengajuanPage> {
                                   width: double.infinity,
                                   padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFE8F5E9).withOpacity(0.8), // Glassmorphism Greenish
+                                    color: const Color(0xFFE8F5E9).withOpacity(0.8), 
                                     borderRadius: BorderRadius.circular(16),
                                     border: Border.all(color: const Color(0xFF2E7D32).withOpacity(0.2)),
                                   ),
@@ -332,7 +332,7 @@ class _RiwayatPengajuanPageState extends State<RiwayatPengajuanPage> {
     bool isRed = false,
     bool isGreen = false,
   }) {
-    Color activeColor = const Color(0xFF337418); // Default Hijau Tua
+    Color activeColor = const Color(0xFF337418); 
     if (isRed) activeColor = const Color(0xFFD32F2F);
     if (isGreen) activeColor = const Color(0xFF2E7D32);
 
@@ -389,7 +389,7 @@ class _RiwayatPengajuanPageState extends State<RiwayatPengajuanPage> {
   Widget _buildInfoRow(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, color: const Color(0xFFFFD700), size: 20), // Ikon Kuning Gold
+        Icon(icon, color: const Color(0xFFFFD700), size: 20), 
         const SizedBox(width: 12),
         Text(label, style: const TextStyle(fontSize: 13, color: Colors.black45, fontWeight: FontWeight.w500)),
         const Spacer(),

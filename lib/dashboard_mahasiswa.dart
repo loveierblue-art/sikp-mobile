@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Tambahkan kembali
+import 'package:cloud_firestore/cloud_firestore.dart'; 
 import 'services/api_service.dart';
 import 'login_page.dart';
 import 'ajukan_kp_page.dart';
 import 'download_surat_page.dart';
 import 'riwayat_pengajuan_page.dart';
-import 'lihat_jadwal_page.dart'; // Buat file baru nanti untuk ini
+import 'lihat_jadwal_page.dart'; 
 
 class DashboardMahasiswa extends StatefulWidget {
   const DashboardMahasiswa({super.key});
@@ -19,6 +19,7 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String currentStatus = 'Belum Diajukan';
 
+  //blob background
   Widget _buildBackgroundBlob(double size, Color color, Alignment alignment) {
     return Align(
       alignment: alignment,
@@ -132,7 +133,7 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // --- NOTIFIKASI JADWAL BARU (REALTIME) ---
+                      // --- NOTIFIKASI JADWAL BIMBINGAN ---
                       StreamBuilder<QuerySnapshot>(
                         stream: _firestore.collection('jadwal_temu').where('npm', isEqualTo: npm).snapshots(),
                         builder: (context, snapshot) {
@@ -173,11 +174,12 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
                       _buildStatusCard(),
                       const SizedBox(height: 28),
 
-                      const Text(
-                        'Menu Utama',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF337418)),
+                      const Text('Menu Utama', style: TextStyle(fontSize: 16, 
+                      fontWeight: FontWeight.w600, color: Color(0xFF337418)),
                       ),
                       const SizedBox(height: 12),
+
+                      // --- GRID MENU UTAMA ---
                       GridView.count(
                         crossAxisCount: 2,
                         shrinkWrap: true,
@@ -195,7 +197,7 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
                             bgColor: const Color(0xFFF0FDF4),
                             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const AjukanKpPage())),
                           ),
-                          // --- MENU BARU: JADWAL TEMU ---
+                          // --- MENU JADWAL TEMU ---
                           _buildMenuCard(
                             context,
                             icon: Icons.event_available_rounded,
@@ -237,6 +239,7 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
     );
   }
 
+  //komponen buat kartu menu (biar ga nulis ulang-ulang)
   Widget _buildStatusCard() {
     return Container(
       width: double.infinity,
@@ -269,7 +272,6 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
     );
   }
 
-  // --- HELPER FUNCTIONS ---
   Color _getStatusColor(String status) {
     if (status == 'Disetujui') return const Color(0xFF337418);
     if (status == 'Menunggu') return const Color(0xFFFFD700);
@@ -313,6 +315,7 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
     );
   }
 
+  //pop-up Logout
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -333,7 +336,7 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
               const SizedBox(height: 16),
               const Text(
                 'Keluar Aplikasi?',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF337418)), // Hijau Tua Palet (Teks)
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF337418)), 
               ),
               const SizedBox(height: 10),
               const Text(
@@ -350,10 +353,11 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
                       child: OutlinedButton(
                         onPressed: () => Navigator.pop(context),
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0xFF337418), width: 1.5), // Hijau Tua Palet (Border)
+                          side: const BorderSide(color: Color(0xFF337418), width: 1.5), 
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text('Batal', style: TextStyle(color: Color(0xFF337418), fontWeight: FontWeight.w600)),
+                        child: const Text('Batal', style: TextStyle(color: Color(0xFF337418), 
+                        fontWeight: FontWeight.w600)),
                       ),
                     ),
                   ),
@@ -384,7 +388,8 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
                             shadowColor: Colors.transparent,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           ),
-                          child: const Text('Keluar', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                          child: const Text('Keluar', style: TextStyle(color: Colors.white, 
+                          fontWeight: FontWeight.w600)),
                         ),
                       ),
                     ),

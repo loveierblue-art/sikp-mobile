@@ -16,16 +16,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF337418), // Hijau Utama dari palet kamu
-          primary: const Color(0xFF337418),   // Hijau Tua
-          secondary: const Color(0xFF202020), // Abu Gelap untuk elemen sekunder
-          surface: const Color(0xFFF8F8F8),   // Background bersih (Off-White)
+          seedColor: const Color(0xFF337418), 
+          primary: const Color(0xFF337418),   
+          secondary: const Color(0xFF202020), 
+          surface: const Color(0xFFF8F8F8),   
           
-          onPrimary: Colors.white,            // Teks di atas hijau
-          onSurface: const Color(0xFF0F0F0F), // Teks di atas putih (Hampir Hitam)
+          onPrimary: Colors.white,           
+          onSurface: const Color(0xFF0F0F0F), 
         ),
 
-        // Styling Input Field agar bersih dan modern
+        //styling input field
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: Colors.white,

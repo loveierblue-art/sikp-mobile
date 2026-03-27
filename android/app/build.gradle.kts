@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.example.sikp_mobile"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 34
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -27,8 +27,8 @@ android {
         applicationId = "com.example.sikp_mobile"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = 21
+        targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -44,4 +44,13 @@ android {
 
 flutter {
     source = "../.."
+}
+subprojects {
+    configurations.all {
+        resolutionStrategy {
+            // Memaksa versi core yang sudah punya atribut lStar
+            force("androidx.core:core:1.13.1")
+            force("androidx.core:core-ktx:1.13.1")
+        }
+    }
 }

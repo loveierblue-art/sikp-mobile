@@ -10,17 +10,17 @@ class JadwalTemuPage extends StatefulWidget {
 }
 
 class _JadwalTemuPageState extends State<JadwalTemuPage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final _formKey = GlobalKey<FormState>();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;  //koneksi ke database Firestore
+  final _formKey = GlobalKey<FormState>();  //kunci buat validasi input (biar gak kosong)
   
-  // Controller untuk Form
+  //controller buat ambil teks yang diketik user
   final TextEditingController _namaController = TextEditingController();
   final TextEditingController _npmController = TextEditingController();
   final TextEditingController _perihalController = TextEditingController();
   final TextEditingController _tanggalController = TextEditingController();
   final TextEditingController _jamController = TextEditingController();
 
-  // 1. Fungsi Pilih Tanggal (Satu-satunya)
+  //munculin kalender bawaan HP
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -47,7 +47,7 @@ class _JadwalTemuPageState extends State<JadwalTemuPage> {
     }
   }
 
-  // 2. Fungsi Pilih Jam
+  //fungsi pilih jam
   Future<void> _selectTime(BuildContext context) async {
     TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -60,39 +60,40 @@ class _JadwalTemuPageState extends State<JadwalTemuPage> {
     }
   }
 
-  // 3. Fungsi Simpan ke Firestore
+  //fungsi kirim data ke Firestore
   Future<void> _simpanJadwal() async {
-    if (_formKey.currentState!.validate()) {
-      await _firestore.collection('jadwal_temu').add({
+    if (_formKey.currentState!.validate()) {  //cek dulu, ada yang kosong gak?
+      await _firestore.collection('jadwal_temu').add({  //nama tabel/koleksi di Firebase
         'nama': _namaController.text,
         'npm': _npmController.text,
         'perihal': _perihalController.text,
         'tanggal': _tanggalController.text,
         'jam': _jamController.text,
         'status': 'Disetujui',
-        'created_at': FieldValue.serverTimestamp(),
+        'created_at': FieldValue.serverTimestamp(),  //catat waktu input otomatis
       });
       
+      //kosongkan form setelah berhasil simpan
       _namaController.clear(); _npmController.clear(); 
       _perihalController.clear(); _tanggalController.clear(); _jamController.clear();
       
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Jadwal bimbingan berhasil dibuat!'))
+        const SnackBar(content: Text('Jadwal bimbingan berhasil dibuat!'))  //notif sukses
       );
     }
   }
 
-  // 4. Fungsi Tampilkan Form (Satu-satunya)
+  //fungsi tampilkan form input yang slide up
   void _showTambahJadwalForm() {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true,
+      isScrollControlled: true,  //biar form-nya gak kepotong keyboard
       backgroundColor: Colors.transparent,
-      builder: (context) => StatefulBuilder(
+      builder: (context) => StatefulBuilder(  //biar inputan di dalam BottomSheet bisa lsg berubah (setState khusus)
         builder: (BuildContext context, StateSetter setModalState) {
           return Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),  //biar form naik pas keyboard muncul
             child: Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -113,14 +114,13 @@ class _JadwalTemuPageState extends State<JadwalTemuPage> {
                       _buildTextField(_namaController, 'Nama Mahasiswa/Kelompok', Icons.person_outline),
                       _buildTextField(_npmController, 'NPM Mahasiswa', Icons.badge_outlined),
                       _buildTextField(_perihalController, 'Perihal Bimbingan', Icons.business_rounded),
-                      
-                      // Baris Tanggal & Jam dengan ukuran berbeda
+
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // TEXTFIELD TANGGAL (DIBUAT LEBIH BESAR/DOMINAN)
+                          //textfield tanggal
                           Expanded(
-                            flex: 3, // Perbandingan 3 untuk Tanggal
+                            flex: 3, 
                             child: _buildTextField(
                               _tanggalController, 
                               'Tanggal', 
@@ -134,7 +134,6 @@ class _JadwalTemuPageState extends State<JadwalTemuPage> {
                                   lastDate: DateTime(2027),
                                 );
                                 if (picked != null) {
-                                  // Update langsung ke controller & modal state
                                   setModalState(() {
                                     _tanggalController.text = DateFormat('dd MMMM yyyy').format(picked);
                                   });
@@ -143,9 +142,9 @@ class _JadwalTemuPageState extends State<JadwalTemuPage> {
                             )
                           ),
                           const SizedBox(width: 12),
-                          // TEXTFIELD JAM (DIBUAT LEBIH KECIL)
+                          //textfield jam
                           Expanded(
-                            flex: 2, // Perbandingan 2 untuk Jam
+                            flex: 2, 
                             child: _buildTextField(
                               _jamController, 
                               'Jam', 
@@ -190,7 +189,7 @@ class _JadwalTemuPageState extends State<JadwalTemuPage> {
     );
   }
 
-  // 5. Widget Build Textfield (Satu-satunya)
+  //widget build textfield
   Widget _buildTextField(TextEditingController controller, String label, IconData icon, {bool readOnly = false, VoidCallback? onTap}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -230,8 +229,10 @@ class _JadwalTemuPageState extends State<JadwalTemuPage> {
       body: Stack(
         children: [
           // Background Decor
-          Positioned(top: -50, right: -50, child: Container(width: 250, height: 250, decoration: BoxDecoration(shape: BoxShape.circle, gradient: RadialGradient(colors: [const Color(0xFF337418).withOpacity(0.15), Colors.transparent])))),
-          Positioned(bottom: 100, left: -80, child: Container(width: 300, height: 300, decoration: BoxDecoration(shape: BoxShape.circle, gradient: RadialGradient(colors: [const Color(0xFFFFD700).withOpacity(0.12), Colors.transparent])))),
+          Positioned(top: -50, right: -50, child: Container(width: 250, height: 250, decoration: BoxDecoration(shape: BoxShape.circle, 
+          gradient: RadialGradient(colors: [const Color(0xFF337418).withOpacity(0.15), Colors.transparent])))),
+          Positioned(bottom: 100, left: -80, child: Container(width: 300, height: 300, decoration: BoxDecoration(shape: BoxShape.circle, 
+          gradient: RadialGradient(colors: [const Color(0xFFFFD700).withOpacity(0.12), Colors.transparent])))),
 
           Column(
             children: [
@@ -245,7 +246,8 @@ class _JadwalTemuPageState extends State<JadwalTemuPage> {
                 padding: const EdgeInsets.only(top: 64, bottom: 40, left: 24, right: 24),
                 child: Column(
                   children: [
-                    Align(alignment: Alignment.centerLeft, child: IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18))),
+                    Align(alignment: Alignment.centerLeft, child: IconButton(onPressed: () => Navigator.pop(context), 
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18))),
                     const SizedBox(height: 10),
                     const Icon(Icons.edit_calendar_rounded, size: 40, color: Colors.white),
                     const SizedBox(height: 14),
@@ -255,10 +257,10 @@ class _JadwalTemuPageState extends State<JadwalTemuPage> {
                 ),
               ),
 
-              // List Jadwal
+              //bagian nampilin data dari database secara Realtime
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: _firestore.collection('jadwal_temu').orderBy('created_at', descending: true).snapshots(),
+                  stream: _firestore.collection('jadwal_temu').orderBy('created_at', descending: true).snapshots(),  //pantau data terbaru
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator(color: Color(0xFF337418)));
                     final docs = snapshot.data?.docs ?? [];
@@ -272,7 +274,8 @@ class _JadwalTemuPageState extends State<JadwalTemuPage> {
                         return Container(
                           margin: const EdgeInsets.only(bottom: 12),
                           padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(color: Colors.white.withOpacity(0.85), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFF337418).withOpacity(0.15))),
+                          decoration: BoxDecoration(color: Colors.white.withOpacity(0.85), borderRadius: BorderRadius.circular(16), 
+                          border: Border.all(color: const Color(0xFF337418).withOpacity(0.15))),
                           child: Row(
                             children: [
                               const CircleAvatar(backgroundColor: Color(0xFFE8F5E9), child: Icon(Icons.groups_rounded, color: Color(0xFF4CAF50))),
@@ -284,12 +287,15 @@ class _JadwalTemuPageState extends State<JadwalTemuPage> {
                                     Text(data['nama'] ?? '-', style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF337418))),
                                     Text('NPM: ${data['npm'] ?? '-'}', style: const TextStyle(fontSize: 11, color: Colors.black45)),
                                     const SizedBox(height: 8),
-                                    Row(children: [const Icon(Icons.business_rounded, size: 14, color: Color(0xFFFFD700)), const SizedBox(width: 6), Text(data['perihal'] ?? '-', style: const TextStyle(fontSize: 12))]),
-                                    Row(children: [const Icon(Icons.access_time_filled, size: 14, color: Color(0xFF4CAF50)), const SizedBox(width: 6), Text("${data['tanggal']} • ${data['jam']}", style: const TextStyle(fontSize: 11))]),
+                                    Row(children: [const Icon(Icons.business_rounded, size: 14, color: Color(0xFFFFD700)), const SizedBox(width: 6), 
+                                    Text(data['perihal'] ?? '-', style: const TextStyle(fontSize: 12))]),
+                                    Row(children: [const Icon(Icons.access_time_filled, size: 14, color: Color(0xFF4CAF50)), const SizedBox(width: 6), 
+                                    Text("${data['tanggal']} • ${data['jam']}", style: const TextStyle(fontSize: 11))]),
                                   ],
                                 ),
                               ),
-                              IconButton(icon: const Icon(Icons.delete_outline, color: Colors.redAccent), onPressed: () => doc.reference.delete()),
+                              IconButton(icon: const Icon(Icons.delete_outline, color: Colors.redAccent), 
+                              onPressed: () => doc.reference.delete()),  //fungsi hapus data lsg ke Firebase
                             ],
                           ),
                         );

@@ -60,10 +60,9 @@ class _ListPengajuanPageState extends State<ListPengajuanPage> {
         _pengajuanList.where((p) => p['status'] == 'Ditolak').length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF8), // Background cerah kehijauan
-      body: Stack( // Menggunakan Stack untuk Efek Blob
+      backgroundColor: const Color(0xFFF8FAF8), 
+      body: Stack( //pakai stack untuk efek blob
         children: [
-          // ── Efek Blob (Lingkaran Gradasi di Belakang) ──
           Positioned(
             top: -50,
             right: -50,
@@ -91,7 +90,7 @@ class _ListPengajuanPageState extends State<ListPengajuanPage> {
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    const Color(0xFFFFD700).withOpacity(0.15), // Kuning Gold
+                    const Color(0xFFFFD700).withOpacity(0.15),
                     const Color(0xFFFFD700).withOpacity(0),
                   ],
                 ),
@@ -102,12 +101,12 @@ class _ListPengajuanPageState extends State<ListPengajuanPage> {
           // ── Konten Utama ──
           Column(
             children: [
-              // ── Header (Sekarang Hijau Tua) ──
+              // ── Header ──
               Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFF1B5E20), Color(0xFF337418)], // Gradasi Hijau Tua
+                    colors: [Color(0xFF1B5E20), Color(0xFF337418)], 
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -154,7 +153,7 @@ class _ListPengajuanPageState extends State<ListPengajuanPage> {
                       child: const Icon(
                         Icons.inbox_rounded,
                         size: 32,
-                        color: Color(0xFFFFD700), // Kuning Gold
+                        color: Color(0xFFFFD700), 
                       ),
                     ),
                     const SizedBox(height: 14),
@@ -279,7 +278,7 @@ class _ListPengajuanPageState extends State<ListPengajuanPage> {
                 ),
               ),
 
-              // ── List Pengajuan (Glassmorphism) ──
+              // ── List Pengajuan ──
               Expanded(
                 child:
                     _isLoading
@@ -347,7 +346,7 @@ class _ListPengajuanPageState extends State<ListPengajuanPage> {
                                   margin: const EdgeInsets.only(bottom: 12),
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
-                                    // Glassmorphism effect: Opacity 0.8
+                                    //glassmorphism effect
                                     color: Colors.white.withOpacity(0.8),
                                     borderRadius: BorderRadius.circular(16),
                                     border: Border.all(
@@ -358,7 +357,7 @@ class _ListPengajuanPageState extends State<ListPengajuanPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      // Baris atas: nama & badge status
+                                      //baris atas: nama & badge status
                                       Row(
                                         children: [
                                           Container(
@@ -427,7 +426,7 @@ class _ListPengajuanPageState extends State<ListPengajuanPage> {
                                       ),
                                       const SizedBox(height: 12),
 
-                                      // Info tambahan
+                                      //info tambahan
                                       _buildInfoChip(
                                         Icons.people_rounded,
                                         'Partner: $namaPartner',
@@ -444,7 +443,7 @@ class _ListPengajuanPageState extends State<ListPengajuanPage> {
                                       ),
                                       const SizedBox(height: 10),
 
-                                      // Tombol lihat detail (Kuning Gold)
+                                      //tombol lihat detail
                                       Align(
                                         alignment: Alignment.centerRight,
                                         child: Container(
@@ -471,7 +470,7 @@ class _ListPengajuanPageState extends State<ListPengajuanPage> {
                                               Icon(
                                                 Icons.arrow_forward_ios_rounded,
                                                 size: 12,
-                                                color: Color(0xFFFFD700), // Kuning Gold
+                                                color: Color(0xFFFFD700), 
                                               ),
                                             ],
                                           ),
