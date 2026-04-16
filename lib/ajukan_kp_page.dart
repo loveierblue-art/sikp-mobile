@@ -56,7 +56,7 @@ class _AjukanKpPageState extends State<AjukanKpPage> {
           (context, child) => Theme(
             data: Theme.of(context).copyWith(
               colorScheme: const ColorScheme.light(
-                primary: Color(0xFF337418), // Hijau Tua
+                primary: Color(0xFF337418),
                 onPrimary: Colors.white,
                 onSurface: Color(0xFF1B3F0D),
               ),
@@ -84,7 +84,7 @@ class _AjukanKpPageState extends State<AjukanKpPage> {
           (context, child) => Theme(
             data: Theme.of(context).copyWith(
               colorScheme: const ColorScheme.light(
-                primary: Color(0xFF337418), // Hijau Tua
+                primary: Color(0xFF337418),
                 onPrimary: Colors.white,
                 onSurface: Color(0xFF1B3F0D),
               ),
@@ -443,7 +443,6 @@ class _AjukanKpPageState extends State<AjukanKpPage> {
       backgroundColor: const Color(0xFFF1F8EE),
       body: Stack(
         children: [
-          // ── Efek Blob (latar belakang) ──
           Positioned(
             top: 150,
             right: -50,
@@ -567,7 +566,7 @@ class _AjukanKpPageState extends State<AjukanKpPage> {
                       child: Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.8), // Opacity 0.8
+                          color: Colors.white.withOpacity(0.8),
                           borderRadius: BorderRadius.circular(24),
                           border: Border.all(
                             color: Colors.white.withOpacity(0.5),
@@ -610,7 +609,7 @@ class _AjukanKpPageState extends State<AjukanKpPage> {
                               'Data Partner KP',
                               Icons.people_rounded,
                               const Color(0xFFFFD700),
-                            ), // Kuning Gold
+                            ),
                             const SizedBox(height: 16),
                             _buildField(
                               _namaPasanganController,
@@ -626,7 +625,7 @@ class _AjukanKpPageState extends State<AjukanKpPage> {
                               Icons.badge_outlined,
                               keyboard: TextInputType.number,
                             ),
-                            const SizedBox(height: 16), // ← tambahkan ini
+                            const SizedBox(height: 16),
                             _buildField(
                               _noTelpPasanganController,
                               'No. Telepon Partner',
@@ -634,6 +633,7 @@ class _AjukanKpPageState extends State<AjukanKpPage> {
                               Icons.phone_outlined,
                               keyboard: TextInputType.phone,
                             ),
+
                             const SizedBox(height: 28),
                             _buildSectionLabel(
                               'Instansi Tujuan',
@@ -660,7 +660,7 @@ class _AjukanKpPageState extends State<AjukanKpPage> {
                               'Tanggal Pelaksanaan',
                               Icons.date_range_rounded,
                               const Color(0xFFFFD700),
-                            ), // Kuning Gold
+                            ),
                             const SizedBox(height: 16),
                             _buildDatePicker(
                               'Tanggal Mulai',
@@ -675,7 +675,6 @@ class _AjukanKpPageState extends State<AjukanKpPage> {
                             ),
 
                             const SizedBox(height: 32),
-                            // Tombol Kirim (Gradasi Hijau)
                             GestureDetector(
                               onTapDown:
                                   (_) => setState(() => _isPressed = true),

@@ -358,27 +358,6 @@ class ApiService {
   }
 
   // ==================================================
-  // GET PENGAJUAN DISETUJUI (untuk Setujui Berkas)
-  // ==================================================
-  Future<Map<String, dynamic>> getPengajuanDisetujui() async {
-    try {
-      final query =
-          await _firestore
-              .collection('pengajuan_kp')
-              .where('status', isEqualTo: 'Disetujui')
-              .orderBy('updatedAt', descending: true)
-              .get();
-
-      final List<Map<String, dynamic>> data =
-          query.docs.map((doc) => {...doc.data(), 'id': doc.id}).toList();
-
-      return {'success': true, 'data': data};
-    } catch (e) {
-      return {'success': false, 'message': 'Gagal mengambil data: $e'};
-    }
-  }
-
-  // ==================================================
   // KIRIM BERKAS KE MAHASISWA
   // ==================================================
   Future<Map<String, dynamic>> kirimBerkas(String docId) async {

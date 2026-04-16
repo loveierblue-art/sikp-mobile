@@ -27,7 +27,11 @@ android {
         applicationId = "com.example.sikp_mobile"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
+<<<<<<< HEAD
         minSdk = flutter.minSdkVersion
+=======
+        minSdk = 21
+>>>>>>> c43980431e21a2115dc2a2e0f27101105c2bd342
         targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -53,4 +57,8 @@ subprojects {
             force("androidx.core:core-ktx:1.13.1")
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c43980431e21a2115dc2a2e0f27101105c2bd342

@@ -13,7 +13,11 @@ import 'package:sikp_mobile/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
+<<<<<<< HEAD
     await tester.pumpWidget(MyApp());
+=======
+    await tester.pumpWidget(const MyApp());
+>>>>>>> c43980431e21a2115dc2a2e0f27101105c2bd342
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

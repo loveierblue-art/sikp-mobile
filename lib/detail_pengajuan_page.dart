@@ -36,15 +36,12 @@ class _DetailPengajuanPageState extends State<DetailPengajuanPage> {
       _showErrorDialog('Silakan pilih dosen pembimbing terlebih dahulu.');
       return;
     }
-    // Tampilkan pilihan surat dulu sebelum konfirmasi
     _showKonfirmasiSetujui();
   }
 
   void _handleTolak() {
     _showKonfirmasiTolak();
   }
-
-  // ── Pilih Surat untuk Preview ──
 
   void _showKonfirmasiSetujui() {
     showDialog(
@@ -134,7 +131,6 @@ class _DetailPengajuanPageState extends State<DetailPengajuanPage> {
                               onPressed: () async {
                                 Navigator.pop(context);
                                 setState(() => _isLoading = true);
-                                // Setujui pengajuan + sekaligus kirim berkas
                                 final result = await _apiService
                                     .setujuiPengajuan(
                                       widget.pengajuan['id'],

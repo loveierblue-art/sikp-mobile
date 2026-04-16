@@ -7,6 +7,7 @@ import 'download_surat_page.dart';
 import 'riwayat_pengajuan_page.dart';
 import 'lihat_jadwal_page.dart';
 import 'pengumuman_page.dart';
+import 'alur_kp_page.dart';
 
 class DashboardMahasiswa extends StatefulWidget {
   const DashboardMahasiswa({super.key});
@@ -190,8 +191,9 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
                                     !data.containsKey('dibaca');
                               }).toList();
 
-                          if (belumDibaca.isEmpty)
+                          if (belumDibaca.isEmpty) {
                             return const SizedBox.shrink();
+                          }
 
                           return GestureDetector(
                             onTap: () async {
@@ -391,6 +393,21 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
                                 MaterialPageRoute(
                                   builder:
                                       (context) => const DownloadSuratPage(),
+                                ),
+                              ),
+                        ),
+                        _buildMenuCard(
+                          context,
+                          icon: Icons.route_rounded,
+                          label: 'Alur KP',
+                          subtitle: 'Prosedur Kerja Praktek',
+                          color: const Color(0xFF1B4D0C),
+                          bgColor: const Color(0xFFE8F5E9),
+                          onTap:
+                              () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const AlurKpPage(),
                                 ),
                               ),
                         ),

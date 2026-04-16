@@ -67,15 +67,13 @@ class _JadwalTemuPageState extends State<JadwalTemuPage> {
     if (_formKey.currentState!.validate()) {
       //cek dulu, ada yang kosong gak?
       await _firestore.collection('jadwal_temu').add({
-        //nama tabel/koleksi di Firebase
         'nama': _namaController.text,
         'npm': _npmController.text,
         'perihal': _perihalController.text,
         'tanggal': _tanggalController.text,
         'jam': _jamController.text,
-        'status': 'Disetujui',
         'dibaca': false,
-        'created_at': FieldValue.serverTimestamp(), //catat waktu input otomatis
+        'created_at': FieldValue.serverTimestamp(),
       });
 
       //kosongkan form setelah berhasil simpan

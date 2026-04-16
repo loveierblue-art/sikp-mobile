@@ -10,31 +10,28 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
-  http: ^1.1.0
+
   firebase_core: ^3.0.0
-  firebase_auth: 5.0.0
+  firebase_auth: ^5.0.0
   cloud_firestore: ^5.0.0
-  pdf: ^3.11.0
-  printing: 5.13.1
-  cupertino_icons: ^1.0.8
-  intl: ^0.20.2
+
   flutter_pdfview: ^1.3.2
   path_provider: ^2.1.2
-  firebase_storage: 12.2.0
-  file_picker: ^8.0.0+1
-  image_picker: ^1.0.7
+
+  http: ^1.1.0
+  intl: ^0.20.2
+  cupertino_icons: ^1.0.8
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  flutter_launcher_icons: ^0.13.1 
+  flutter_launcher_icons: ^0.13.1
 
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/images/logo_apk.png"
-
   adaptive_icon_foreground: "assets/images/logo_apk.png"
 
 flutter:
@@ -42,7 +39,7 @@ flutter:
 
   assets:
     - assets/images/logo_unkhair.png
-    - assets/images/logo_apk.png 
+    - assets/images/logo_apk.png
     - assets/surat_permohonan_kp.pdf
     - assets/surat_permohonan_dosen.pdf
     - assets/surat_tugas_kp.pdf
